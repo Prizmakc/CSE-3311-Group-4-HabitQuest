@@ -22,14 +22,11 @@ Mobile-first habit and goal execution app.
 
 ## Setup
 1. Copy `.env.example` to `.env`.
-2. Fill in:
-- `EXPO_PUBLIC_SUPABASE_URL`
-- `EXPO_PUBLIC_SUPABASE_ANON_KEY`
-3. Install dependencies:
+2. Install dependencies:
 ```bash
 npm install
 ```
-4. Run the app:
+3. Run the app:
 ```bash
 npm run start
 ```
