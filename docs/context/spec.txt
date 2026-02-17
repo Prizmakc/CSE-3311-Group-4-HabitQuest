@@ -1,0 +1,190 @@
+          HabitQuest - Project Context for Codex
+Prepared for Iteration 1 development | Feb 17, 2026
+
+
+
+1. One-paragraph summary
+HabitQuest is a mobile-first habit and goal execution app for students and young professionals who
+struggle to turn big goals into daily action. The core idea is a tight accountability loop: users set a goal,
+break it into concrete steps/habits, check in daily, reflect (daily/weekly/monthly), and see visible progress
+so momentum is sustained. The app adds lightweight gamification (streaks/rewards) and an optional
+'Gentle Mode' that reduces scope when burnout risk is high, helping users focus only on the most
+important goals without quitting entirely.
+
+
+2. Problem, audience, and success criteria
+Problem: Big goals stay vague; users fail to translate them into small steps, lack a daily accountability
+loop, progress is not visible, they lose momentum and quit - making consistent habit-building hard.
+
+Target audience: Students and young professionals (mobile-first usage, limited time/attention, frequent
+schedule changes).
+
+What 'success' means (product-level):
+ • A user can define a goal and see it converted into an actionable set of steps/habits.
+ • A user can complete a daily check-in in under 60 seconds.
+ • Progress is visible and motivating (streaks/progress views).
+ • When the user falls behind, the app helps them recover rather than quit (Gentle Mode / flexible streak
+    handling).
+
+
+3. Differentiation (must be defensible)
+The market is crowded (habit trackers, to-do apps, coaching apps, gamified apps). HabitQuest
+differentiates on the combination below:
+  • Goal -> Steps translation: The system forces goals to become concrete, schedulable steps (size,
+     frequency, time constraints).
+ • Daily accountability loop: Daily check-in + reflection is first-class, tied to the goal and steps (not an
+    afterthought).
+ • Gentle Mode: A deliberate burnout-friendly mode that temporarily narrows focus to the most important
+    goals/steps to preserve long-term consistency.
+ • Progress visibility: Simple but clear progress indicators (streaks, pace, completion history) so users
+    can see momentum.
+
+
+
+
+                                                                                                         Page 1
+4. Competitive landscape (reference list)
+Representative competitors and their typical strengths:
+
+     App                     What they are strong at (high level)
+     GoalsOnTrack            SMART goals + nested subgoals, action planning tools
+
+     Strides                 Multiple goal types + pacing/trajectory visualization
+
+     Habitify                Analytics-heavy tracking organized by life areas
+
+     Atoms (Atomic Habits)   Identity-based habits + habit stacking concepts
+
+     Fabulous                Behavioral-science guided routines/journeys
+
+     Streaks                 Minimal daily habit streak tracker (limited tasks)
+
+     Habitica                RPG-style gamification and rewards
+
+     TickTick                Task manager + habit module + timers
+
+
+HabitQuest's positioning should be communicated as: 'turn goals into daily steps with an
+accountability loop and burnout-friendly focus.'
+
+
+
+
+                                                                                           Page 2
+5. Core user experience (the 'loop')
+The app is designed around a short repeatable loop:
+ • Set Goal: User defines a goal (title, why it matters, target date or cadence).
+ • Break Down: User creates or confirms steps/habits (small, schedulable actions).
+ • Daily Check-in: User marks steps done/not done and optionally adds a 1-line note.
+ • Reflect: Daily/weekly/monthly reflections summarize what worked and what didn't.
+ • Progress: Streaks and progress views reinforce momentum; gentle mode helps recovery after
+   setbacks.
+
+
+6. Functional requirements (build targets)
+Goals
+ • Create/edit/archive a goal (name, description/why, optional target date).
+ • Goal contains one or more steps (habits or tasks).
+ • Goal card shows high-level progress (e.g., steps completed this week, streak).
+
+
+Steps / Habits
+ • Create/edit/delete a step under a goal (name, frequency, optional difficulty/estimated time).
+ • Step has completion history (dates completed).
+ • Special case: step list can be empty initially; user is prompted to add at least one.
+
+
+Check-in
+ • Daily check-in screen shows today's due steps across goals.
+ • User marks each step as done / skipped (or not done).
+ • Optional quick note: 'why' or blocker.
+ • Special case: missed day(s) should not hard-fail the user; show recovery UX.
+
+
+Reflections
+ • Daily reflection prompt (very short) after check-in or end-of-day.
+ • Weekly/monthly reflection screens (summary + prompts).
+ • Special case: empty state (not enough data yet) still shows something useful.
+
+
+Notifications / Reminders
+ • User can enable/disable reminders.
+ • User can set a reminder time window or specific time.
+ • Special case: if notification permission denied, show in-app fallback reminder messaging.
+
+
+Gamification
+ • Streak counter for steps and/or check-ins.
+ • Congrats/reward screen on completion milestones (e.g., 7-day streak).
+
+
+                                                                                                   Page 3
+ • Special case: allow flexible streak policy (e.g., one 'grace' day) or tie to Gentle Mode.
+
+
+Gentle Mode (burnout-friendly)
+ • When enabled, user focuses on only the most important goals/steps temporarily.
+ • App recommends reducing scope (e.g., top 1-2 goals) based on user choice or simple signals (e.g.,
+   repeated misses).
+ • Clear messaging: Gentle Mode is about consistency, not failure.
+
+
+
+
+                                                                                                 Page 4
+7. Non-goals (explicitly out of scope for now)
+ • Verifying that a user actually achieved a real-world goal (no external enforcement).
+ • Complex social network features (sharing with friends is a 'later' idea, not Iteration 1).
+ • Advanced AI coaching beyond simple step suggestions (can be added later).
+ • Deep analytics dashboards (keep early versions simple and readable).
+
+
+8. Data model (suggested minimal design)
+Use a simple local-first model (can be implemented in any language/framework).
+
+     Entity                  Key fields (minimum)
+     Goal                    id, title, why/description, created_at, archived_at (nullable)
+
+     Step                    id, goal_id, title, frequency (e.g., daily/3x-week), est_minutes (optional), active (bool)
+
+     CheckIn                 id, date, created_at
+
+     StepCompletion          id, step_id, date, status (done/skipped), note (optional)
+
+     Reflection              id, period (daily/weekly/monthly), start_date, end_date, responses (text/json)
+
+
+9. Screen list (for UI + demo planning)
+ • Home / Dashboard: goal cards, today's summary, quick check-in entry point.
+ • Goal detail: goal overview + steps list + progress history.
+ • Create/Edit goal: goal info + step breakdown flow.
+ • Daily check-in: today's steps across goals; done/skipped + quick note.
+ • Reflection: daily reflection + weekly/monthly summary screens.
+ • Notifications settings: reminder scheduling + permission handling.
+ • Gentle Mode: enable/disable + choose focus goals/steps.
+ • Congrats / rewards: streak milestones and completion acknowledgements.
+
+
+10. Iteration 1 build targets (recommended)
+Iteration 1 should produce a demoable slice of the core loop (not every feature). Recommended minimum:
+  • Create a goal + add steps (manual step entry is fine).
+ • Daily check-in: mark steps done and view streak.
+ • Basic progress view on goal card or goal detail.
+ • At least one special case handled (e.g., missed day recovery or empty-state step prompting).
+ • Clickable/demoable prototype available for classmates (if possible): deployed build, web demo, or
+   interactive prototype.
+
+
+Appendix: Notes for the Iteration 1 presentation rubric
+Slides should be visual-first (full-screen screens), numbered, and include citations for any third-party
+assets used. The demo should show new features + special cases and be easy to follow. Screen designs
+
+
+                                                                                                                  Page 5
+should cover planned next-iteration features, special cases, and transitions.
+
+
+
+
+                                                                                Page 6
+

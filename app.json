@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "HabitQuest",
+    "slug": "habitquest",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "habitquest",
+    "userInterfaceStyle": "light",
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    },
+    "android": {
+      "package": "com.habitquest.app"
+    },
+    "ios": {
+      "bundleIdentifier": "com.habitquest.app"
+    }
+  }
+}
