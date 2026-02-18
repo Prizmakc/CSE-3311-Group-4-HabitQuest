@@ -9,6 +9,7 @@ import { supabase } from "../../src/lib/supabase";
 export default function SignupScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -16,6 +17,12 @@ export default function SignupScreen() {
   async function onSignup() {
     setError("");
     setSuccess("");
+
+    if (password !== confirmPassword) {
+      setError("Passwords do not match.");
+      return;
+    }
+
     setIsSubmitting(true);
 
     const { error: signUpError } = await supabase.auth.signUp({
@@ -30,7 +37,7 @@ export default function SignupScreen() {
       return;
     }
 
-    setSuccess("Account created. Check your email to verify your account.");
+    setSuccess("Account created. You can now log in.");
     router.replace("/(auth)/login");
   }
 
@@ -53,16 +60,29 @@ export default function SignupScreen() {
             value={password}
             onChangeText={setPassword}
           />
+          <AuthInput
+            placeholder="Confirm password"
+            secureTextEntry
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+          />
 
           {error ? <Text style={styles.error}>{error}</Text> : null}
           {success ? <Text style={styles.success}>{success}</Text> : null}
 
           <Pressable
-            disabled={isSubmitting || !email || password.length < 6}
+            disabled={
+              isSubmitting || !email || password.length < 6 || confirmPassword.length < 6
+            }
             onPress={onSignup}
             style={({ pressed }) => [
               styles.primaryButton,
-              (pressed || isSubmitting || !email || password.length < 6) && styles.primaryButtonDisabled
+              (pressed ||
+                isSubmitting ||
+                !email ||
+                password.length < 6 ||
+                confirmPassword.length < 6) &&
+                styles.primaryButtonDisabled
             ]}
           >
             {isSubmitting ? (

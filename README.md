@@ -29,9 +29,11 @@ cp .env.example .env
 - Project URL
 - `anon` public key
 
-Paste them into `.env`:
+Paste them into either:
+- `.env`:
 - `EXPO_PUBLIC_SUPABASE_URL=...`
 - `EXPO_PUBLIC_SUPABASE_ANON_KEY=...`
+- or `src/config/supabaseConfig.ts` (shared repo config fallback for team demos)
 
 > Do **not** commit `.env`. Only `.env.example` is meant for the repo.
 
@@ -65,4 +67,5 @@ Then scan the QR **inside Expo Go**.
 
 ## Common Issues
 - **“Missing Supabase env vars …”**: you don’t have a `.env` file or the variable names don’t match `.env.example`.
+- **“Missing Supabase config …”**: set keys in `.env` or `src/config/supabaseConfig.ts`.
 - **Expo Go says SDK mismatch**: run `npm install` and make sure you're on the latest project branch; Expo Go only supports certain SDKs.
