@@ -8,19 +8,19 @@ Mobile-first habit and goal execution app.
 - **Expo Router** — file-based navigation (screens live in `app/`)
 - **Supabase Auth** — email/password authentication backend
 
-## Project Structure (current scaffold)
+## Project Structure
 - **Auth screens**: `app/(auth)/login.tsx`, `signup.tsx`, `forgot-password.tsx`
 - **Protected app area**: `app/(app)/index.tsx` (placeholder home after login)
 - **Session provider**: `src/providers/AuthProvider.tsx`
 - **Supabase client**: `src/lib/supabase.ts`
 
 ## Prerequisites
-- Node.js (recommended: **v20+**) and npm
-- Expo Go (for quick testing on a phone)
+- Node.js (recommended: v20+) and npm
+- Expo Go (testing on phone)
 - A Supabase project (for auth)
 
 ## Setup (one-time)
-1) **Create your local env file** (keeps secrets off GitHub):
+1) **Create your local env file**:
 ```bash
 cp .env.example .env
 ```
@@ -33,7 +33,7 @@ Paste them into `.env`:
 - `EXPO_PUBLIC_SUPABASE_URL=...`
 - `EXPO_PUBLIC_SUPABASE_ANON_KEY=...`
 
-> Do **not** commit `.env` (it contains secrets). Only `.env.example` is meant for the repo.
+> Do **not** commit `.env`. Only `.env.example` is meant for the repo.
 
 3) **Install dependencies**:
 ```bash
