@@ -19,25 +19,7 @@ Mobile-first habit and goal execution app.
 - Expo Go (testing on phone)
 - A Supabase project (for auth)
 
-## Setup (one-time)
-1) **Create your local env file**:
-```bash
-cp .env.example .env
-```
-
-2) **Create a Supabase project**, then copy:
-- Project URL
-- `anon` public key
-
-Paste them into either:
-- `.env`:
-- `EXPO_PUBLIC_SUPABASE_URL=...`
-- `EXPO_PUBLIC_SUPABASE_ANON_KEY=...`
-- or `src/config/supabaseConfig.ts` (shared repo config fallback for team demos)
-
-> Do **not** commit `.env`. Only `.env.example` is meant for the repo.
-
-3) **Install dependencies**:
+**Install dependencies**:
 ```bash
 npm install
 ```
