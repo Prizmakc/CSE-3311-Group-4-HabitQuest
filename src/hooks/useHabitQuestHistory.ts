@@ -1,29 +1,8 @@
-import { useEffect, useState } from "react";
-
 import { getHistoryViewModel } from "../domain/habitQuestHistory";
-import { loadHabitQuestData } from "../lib/habitQuestStore";
-import { HabitQuestData } from "../types/habitquest";
+import { useHabitQuestData } from "../providers/HabitQuestDataProvider";
 
 export function useHabitQuestHistory() {
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState<HabitQuestData | null>(null);
-
-  useEffect(() => {
-    let mounted = true;
-
-    loadHabitQuestData().then((nextData) => {
-      if (!mounted) {
-        return;
-      }
-
-      setData(nextData);
-      setIsLoading(false);
-    });
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
+  const { isLoading, data } = useHabitQuestData();
 
   return {
     isLoading,
@@ -31,4 +10,3 @@ export function useHabitQuestHistory() {
     history: data ? getHistoryViewModel(data) : null
   };
 }
-

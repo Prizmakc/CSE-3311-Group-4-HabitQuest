@@ -27,18 +27,6 @@ export const historyStyles = StyleSheet.create({
     padding: 18,
     gap: 12
   },
-  backButton: {
-    alignSelf: "flex-start",
-    backgroundColor: "#E8EFE6",
-    borderRadius: 999,
-    paddingHorizontal: 14,
-    paddingVertical: 10
-  },
-  backButtonText: {
-    color: "#1E362F",
-    fontSize: 13,
-    fontWeight: "700"
-  },
   eyebrow: {
     color: "#D5E3DC",
     textTransform: "uppercase",
@@ -183,4 +171,3 @@ export const historyStyles = StyleSheet.create({
     lineHeight: 19
   }
 });
-

@@ -138,10 +138,6 @@ export const homeStyles = StyleSheet.create({
     gap: 12,
     alignItems: "flex-start"
   },
-  sectionHeaderCopy: {
-    flex: 1,
-    gap: 4
-  },
   sectionTitle: {
     color: "#1E362F",
     fontSize: 22,
@@ -166,18 +162,6 @@ export const homeStyles = StyleSheet.create({
   progressCaption: {
     color: "#5E6F66",
     fontSize: 13
-  },
-  historyLinkButton: {
-    borderWidth: 1,
-    borderColor: "#D6CAB8",
-    borderRadius: 999,
-    paddingHorizontal: 12,
-    paddingVertical: 9
-  },
-  historyLinkText: {
-    color: "#5B5144",
-    fontSize: 13,
-    fontWeight: "700"
   },
   rewardCard: {
     backgroundColor: "#EEE2D0",

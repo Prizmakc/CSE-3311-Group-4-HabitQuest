@@ -1,23 +1,18 @@
-import { Pressable, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 import { historyStyles } from "./styles";
 
 export function HistoryHeader({
   streak,
   checkInsThisWeek,
-  reflectionCount,
-  onBack
+  reflectionCount
 }: {
   streak: number;
   checkInsThisWeek: number;
   reflectionCount: number;
-  onBack: () => void;
 }) {
   return (
     <View style={historyStyles.headerCard}>
-      <Pressable onPress={onBack} style={historyStyles.backButton}>
-        <Text style={historyStyles.backButtonText}>Back to today</Text>
-      </Pressable>
       <Text style={historyStyles.eyebrow}>History</Text>
       <Text style={historyStyles.title}>A gentler view of progress.</Text>
       <Text style={historyStyles.subtitle}>
@@ -40,4 +35,3 @@ export function HistoryHeader({
     </View>
   );
 }
-

@@ -1,4 +1,3 @@
-import { router } from "expo-router";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -30,7 +29,6 @@ export default function HistoryScreen() {
           streak={history.streak}
           checkInsThisWeek={history.checkInsThisWeek}
           reflectionCount={history.reflectionCount}
-          onBack={() => router.back()}
         />
         <TrendSummaryCard
           totalCompleted={history.totalCompleted}
@@ -44,4 +42,3 @@ export default function HistoryScreen() {
     </SafeAreaView>
   );
 }
-

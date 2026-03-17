@@ -1,18 +1,14 @@
-import { router } from "expo-router";
 import { useState } from "react";
 import { ActivityIndicator, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { DailyCheckInCard } from "../../src/components/home/DailyCheckInCard";
-import { DeveloperToolsCard } from "../../src/components/home/DeveloperToolsCard";
 import { GentleModeBanner } from "../../src/components/home/GentleModeBanner";
-import { GoalComposerCard } from "../../src/components/home/GoalComposerCard";
-import { GoalsListCard } from "../../src/components/home/GoalsListCard";
 import { HomeHero } from "../../src/components/home/HomeHero";
 import { ProgressSnapshotCard } from "../../src/components/home/ProgressSnapshotCard";
 import { ReflectionCard } from "../../src/components/home/ReflectionCard";
 import { homeStyles } from "../../src/components/home/styles";
-import { useHabitQuestHome } from "../../src/hooks/useHabitQuestHome";
+import { useHabitQuestToday } from "../../src/hooks/useHabitQuestToday";
 import { supabase } from "../../src/lib/supabase";
 
 export default function HomeScreen() {
@@ -22,12 +18,21 @@ export default function HomeScreen() {
     saveState,
     data,
     history,
-    goalForm,
-    checkInForm,
-    reflectionForm,
-    gentleMode,
-    developerTools
-  } = useHabitQuestHome();
+    dailyNote,
+    setDailyNote,
+    energy,
+    setEnergy,
+    reflectionText,
+    setReflectionText,
+    reflectionPeriod,
+    setReflectionPeriod,
+    reflectionMessage,
+    setReflectionMessage,
+    saveDailyNote,
+    setStepStatus,
+    saveReflection,
+    enableGentleMode
+  } = useHabitQuestToday();
 
   async function onSignOut() {
     setIsSigningOut(true);
@@ -60,14 +65,6 @@ export default function HomeScreen() {
           }}
         />
 
-        {history.gentleModeSuggestion ? (
-          <GentleModeBanner
-            onEnable={() => {
-              void gentleMode.enableGentleMode();
-            }}
-          />
-        ) : null}
-
         <ProgressSnapshotCard
           goalCount={data.goals.length}
           requiredStepsToday={history.requiredStepsToday}
@@ -76,77 +73,44 @@ export default function HomeScreen() {
             data.goals[0]?.reward ||
             "Pick a simple reward after a strong week of follow-through."
           }
-          onViewHistory={() => {
-            void router.push("./history");
-          }}
         />
 
         <DailyCheckInCard
           allSteps={history.allSteps}
           todayCheckIn={history.todayCheckIn}
-          energy={checkInForm.energy}
-          setEnergy={checkInForm.setEnergy}
-          dailyNote={checkInForm.dailyNote}
-          setDailyNote={checkInForm.setDailyNote}
+          energy={energy}
+          setEnergy={setEnergy}
+          dailyNote={dailyNote}
+          setDailyNote={setDailyNote}
           saveState={saveState}
           onSetStepStatus={(stepId, status) => {
-            void checkInForm.setStepStatus(stepId, status);
+            void setStepStatus(stepId, status);
           }}
           onSaveDailyNote={() => {
-            void checkInForm.saveDailyNote();
+            void saveDailyNote();
           }}
         />
 
         <ReflectionCard
-          reflectionPeriod={reflectionForm.reflectionPeriod}
-          setReflectionPeriod={reflectionForm.setReflectionPeriod}
-          reflectionText={reflectionForm.reflectionText}
+          reflectionPeriod={reflectionPeriod}
+          setReflectionPeriod={setReflectionPeriod}
+          reflectionText={reflectionText}
           setReflectionText={(text) => {
-            reflectionForm.setReflectionText(text);
-            if (reflectionForm.reflectionMessage) {
-              reflectionForm.setReflectionMessage("");
+            setReflectionText(text);
+            if (reflectionMessage) {
+              setReflectionMessage("");
             }
           }}
-          reflectionMessage={reflectionForm.reflectionMessage}
+          reflectionMessage={reflectionMessage}
           onSaveReflection={() => {
-            void reflectionForm.saveReflection();
+            void saveReflection();
           }}
         />
 
-        <GoalsListCard
-          goals={data.goals}
-          gentleModeEnabled={data.gentleModeEnabled}
-          onDisableGentleMode={() => {
-            void gentleMode.disableGentleMode();
-          }}
-        />
-
-        <GoalComposerCard
-          goalTitle={goalForm.goalTitle}
-          setGoalTitle={goalForm.setGoalTitle}
-          goalWhy={goalForm.goalWhy}
-          setGoalWhy={goalForm.setGoalWhy}
-          goalReward={goalForm.goalReward}
-          setGoalReward={goalForm.setGoalReward}
-          stepDraft={goalForm.stepDraft}
-          setStepDraft={goalForm.setStepDraft}
-          draftSteps={goalForm.draftSteps}
-          goalError={goalForm.goalError}
-          goalSuccess={goalForm.goalSuccess}
-          onAddDraftStep={goalForm.addDraftStep}
-          onRemoveDraftStep={goalForm.removeDraftStep}
-          onSaveGoal={() => {
-            void goalForm.saveGoal();
-          }}
-        />
-
-        {__DEV__ ? (
-          <DeveloperToolsCard
-            onSeedDemoData={() => {
-              void developerTools.seedDemoData();
-            }}
-            onResetLocalData={() => {
-              void developerTools.resetLocalData();
+        {history.gentleModeSuggestion ? (
+          <GentleModeBanner
+            onEnable={() => {
+              void enableGentleMode();
             }}
           />
         ) : null}
