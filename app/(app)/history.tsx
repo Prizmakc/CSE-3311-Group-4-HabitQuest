@@ -5,11 +5,21 @@ import { CheckInHistoryCard } from "../../src/components/history/CheckInHistoryC
 import { HistoryHeader } from "../../src/components/history/HistoryHeader";
 import { ReflectionHistoryCard } from "../../src/components/history/ReflectionHistoryCard";
 import { TrendSummaryCard } from "../../src/components/history/TrendSummaryCard";
+import { ReflectionCard } from "../../src/components/home/ReflectionCard";
 import { historyStyles } from "../../src/components/history/styles";
 import { useHabitQuestHistory } from "../../src/hooks/useHabitQuestHistory";
 
 export default function HistoryScreen() {
-  const { isLoading, history } = useHabitQuestHistory();
+  const {
+    isLoading,
+    history,
+    editingReflectionDate,
+    editingReflectionText,
+    setEditingReflectionText,
+    openReflectionEditor,
+    closeReflectionEditor,
+    saveEditedReflection
+  } = useHabitQuestHistory();
 
   if (isLoading || !history) {
     return (
@@ -26,7 +36,6 @@ export default function HistoryScreen() {
     <SafeAreaView style={historyStyles.safe}>
       <ScrollView contentContainerStyle={historyStyles.container}>
         <HistoryHeader
-          streak={history.streak}
           checkInsThisWeek={history.checkInsThisWeek}
           reflectionCount={history.reflectionCount}
         />
@@ -34,11 +43,28 @@ export default function HistoryScreen() {
           totalCompleted={history.totalCompleted}
           totalPartial={history.totalPartial}
           totalSkipped={history.totalSkipped}
-          energyTrendCopy={history.energyTrendCopy}
         />
         <CheckInHistoryCard checkIns={history.recentCheckIns} />
-        <ReflectionHistoryCard reflections={history.recentReflections} />
+        <ReflectionHistoryCard
+          reflections={history.recentReflections}
+          onEditReflection={openReflectionEditor}
+        />
       </ScrollView>
+
+      <ReflectionCard
+        visible={Boolean(editingReflectionDate)}
+        gentleModeEnabled={false}
+        reflectionText={editingReflectionText}
+        setReflectionText={setEditingReflectionText}
+        title="Edit reflection"
+        bodyText="Update what you want to keep from this day."
+        cancelLabel="Cancel"
+        saveLabel="Save"
+        onCancel={closeReflectionEditor}
+        onSaveReflection={() => {
+          void saveEditedReflection();
+        }}
+      />
     </SafeAreaView>
   );
 }

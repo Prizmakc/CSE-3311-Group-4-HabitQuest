@@ -1,5 +1,4 @@
-import { DailyCheckIn, HabitQuestData, Reflection, StepStatus } from "../types/habitquest";
-import { sortReflectionsDescending } from "./habitQuestSelectors";
+import { DailyCheckIn, HabitQuestData, StepStatus } from "../types/habitquest";
 import { getHistorySnapshot } from "./habitQuestProgress";
 
 function countStatuses(statuses: Record<string, StepStatus>, target: StepStatus) {
@@ -18,25 +17,17 @@ function getLastSevenDateKeys() {
   return dates;
 }
 
-function formatEnergyTrend(checkIns: DailyCheckIn[]) {
-  const energeticDays = checkIns.filter((checkIn) => checkIn.energy === "good").length;
-
-  if (energeticDays >= 3) {
-    return "Energy has been mostly steady or better.";
-  }
-
-  if (energeticDays === 0) {
-    return "Energy has been mixed. Gentle pacing may help.";
-  }
-
-  return "Energy is uneven, but there are some steadier days to build on.";
-}
-
 export function getHistoryViewModel(data: HabitQuestData) {
   const snapshot = getHistorySnapshot(data);
   const lastSevenDates = getLastSevenDateKeys();
   const lastSevenCheckIns = snapshot.checkIns.filter((checkIn) => lastSevenDates.includes(checkIn.date));
-  const recentReflections = sortReflectionsDescending(data.reflections).slice(0, 5);
+  const recentReflections = snapshot.checkIns
+    .filter((checkIn) => checkIn.reflection)
+    .slice(0, 5)
+    .map((checkIn) => ({
+      date: checkIn.date,
+      text: checkIn.reflection ?? ""
+    }));
   const totalCompleted = lastSevenCheckIns.reduce(
     (sum, checkIn) => sum + countStatuses(checkIn.statuses, "completed"),
     0
@@ -58,15 +49,14 @@ export function getHistoryViewModel(data: HabitQuestData) {
     totalSkipped,
     recentCheckIns: snapshot.checkIns.slice(0, 7),
     recentReflections,
-    energyTrendCopy: formatEnergyTrend(lastSevenCheckIns),
-    reflectionCount: data.reflections.length
+    reflectionCount: recentReflections.length
   };
 }
 
-export function formatReflectionDate(reflection: Reflection) {
-  return new Date(reflection.createdAt).toLocaleDateString(undefined, {
+export function formatHistoryDate(date: string) {
+  return new Date(`${date}T00:00:00`).toLocaleDateString(undefined, {
     month: "short",
-    day: "numeric"
+    day: "numeric",
+    year: "numeric"
   });
 }
-

@@ -3,6 +3,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { DeveloperToolsCard } from "../../src/components/home/DeveloperToolsCard";
 import { GoalComposerCard } from "../../src/components/home/GoalComposerCard";
+import { GoalEditModal } from "../../src/components/home/GoalEditModal";
 import { GoalsListCard } from "../../src/components/home/GoalsListCard";
 import { homeStyles } from "../../src/components/home/styles";
 import { useHabitQuestGoals } from "../../src/hooks/useHabitQuestGoals";
@@ -25,6 +26,23 @@ export default function GoalsScreen() {
     addDraftStep,
     removeDraftStep,
     saveGoal,
+    editingGoal,
+    editGoalTitle,
+    setEditGoalTitle,
+    editGoalWhy,
+    setEditGoalWhy,
+    editGoalReward,
+    setEditGoalReward,
+    editStepDraft,
+    setEditStepDraft,
+    editSteps,
+    openGoalEditor,
+    closeGoalEditor,
+    addEditStep,
+    renameEditStep,
+    deleteEditStep,
+    saveEditedGoal,
+    requestDeleteGoal,
     disableGentleMode,
     seedDemoData,
     resetLocalData
@@ -50,6 +68,8 @@ export default function GoalsScreen() {
           onDisableGentleMode={() => {
             void disableGentleMode();
           }}
+          onEditGoal={openGoalEditor}
+          onDeleteGoal={requestDeleteGoal}
         />
 
         <GoalComposerCard
@@ -82,6 +102,31 @@ export default function GoalsScreen() {
           />
         ) : null}
       </ScrollView>
+
+      <GoalEditModal
+        visible={Boolean(editingGoal)}
+        title={editGoalTitle}
+        setTitle={setEditGoalTitle}
+        why={editGoalWhy}
+        setWhy={setEditGoalWhy}
+        reward={editGoalReward}
+        setReward={setEditGoalReward}
+        stepDraft={editStepDraft}
+        setStepDraft={setEditStepDraft}
+        steps={editSteps}
+        onAddStep={addEditStep}
+        onRenameStep={renameEditStep}
+        onDeleteStep={deleteEditStep}
+        onCancel={closeGoalEditor}
+        onDeleteGoal={() => {
+          if (editingGoal) {
+            requestDeleteGoal(editingGoal.id);
+          }
+        }}
+        onSave={() => {
+          void saveEditedGoal();
+        }}
+      />
     </SafeAreaView>
   );
 }

@@ -6,11 +6,15 @@ import { homeStyles } from "./styles";
 export function GoalsListCard({
   goals,
   gentleModeEnabled,
-  onDisableGentleMode
+  onDisableGentleMode,
+  onEditGoal,
+  onDeleteGoal
 }: {
   goals: Goal[];
   gentleModeEnabled: boolean;
   onDisableGentleMode: () => void;
+  onEditGoal: (goalId: string) => void;
+  onDeleteGoal: (goalId: string) => void;
 }) {
   return (
     <View style={homeStyles.sectionCard}>
@@ -30,7 +34,17 @@ export function GoalsListCard({
       ) : (
         goals.map((goal) => (
           <View key={goal.id} style={homeStyles.goalCard}>
-            <Text style={homeStyles.goalCardTitle}>{goal.title}</Text>
+            <View style={homeStyles.goalCardHeader}>
+              <Text style={homeStyles.goalCardTitle}>{goal.title}</Text>
+              <View style={homeStyles.goalCardActions}>
+                <Pressable onPress={() => onEditGoal(goal.id)}>
+                  <Text style={homeStyles.goalCardActionText}>Edit</Text>
+                </Pressable>
+                <Pressable onPress={() => onDeleteGoal(goal.id)}>
+                  <Text style={homeStyles.goalCardActionDangerText}>Delete</Text>
+                </Pressable>
+              </View>
+            </View>
             {goal.why ? <Text style={homeStyles.goalCardWhy}>{goal.why}</Text> : null}
             {goal.reward ? <Text style={homeStyles.goalCardReward}>Reward: {goal.reward}</Text> : null}
             <View style={homeStyles.goalCardSteps}>
@@ -46,4 +60,3 @@ export function GoalsListCard({
     </View>
   );
 }
-

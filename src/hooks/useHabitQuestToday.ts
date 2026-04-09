@@ -3,23 +3,36 @@ import { useEffect, useState } from "react";
 import { getHistorySnapshot } from "../domain/habitQuestProgress";
 import { getTodayCheckIn } from "../domain/habitQuestSelectors";
 import { useHabitQuestData } from "../providers/HabitQuestDataProvider";
-import { DailyCheckIn, Reflection } from "../types/habitquest";
+import { StepStatus } from "../types/habitquest";
+
+function cycleStatus(status: StepStatus | null) {
+  if (status === null) {
+    return "completed";
+  }
+
+  if (status === "completed") {
+    return "partial";
+  }
+
+  if (status === "partial") {
+    return "skipped";
+  }
+
+  return null;
+}
 
 export function useHabitQuestToday() {
   const {
     isLoading,
     saveState,
     data,
-    setStepStatus,
-    saveDailyNote,
+    saveCheckIn,
     saveReflection,
     enableGentleMode
   } = useHabitQuestData();
-  const [dailyNote, setDailyNote] = useState("");
-  const [energy, setEnergy] = useState<DailyCheckIn["energy"]>("");
+  const [draftStatuses, setDraftStatuses] = useState<Record<string, StepStatus>>({});
   const [reflectionText, setReflectionText] = useState("");
-  const [reflectionPeriod, setReflectionPeriod] = useState<Reflection["period"]>("daily");
-  const [reflectionMessage, setReflectionMessage] = useState("");
+  const [isReflectionModalOpen, setIsReflectionModalOpen] = useState(false);
 
   useEffect(() => {
     if (!data) {
@@ -27,36 +40,57 @@ export function useHabitQuestToday() {
     }
 
     const todayCheckIn = getTodayCheckIn(data.checkIns);
-    setDailyNote(todayCheckIn?.note ?? "");
-    setEnergy(todayCheckIn?.energy ?? "");
+    setDraftStatuses(todayCheckIn?.statuses ?? {});
   }, [data]);
 
   const history = data ? getHistorySnapshot(data) : null;
+
+  function toggleTaskStatus(stepId: string) {
+    setDraftStatuses((current) => {
+      const nextStatus = cycleStatus(current[stepId] ?? null);
+
+      if (nextStatus === null) {
+        const next = { ...current };
+        delete next[stepId];
+        return next;
+      }
+
+      return {
+        ...current,
+        [stepId]: nextStatus
+      };
+    });
+  }
+
+  async function completeCheckIn() {
+    await saveCheckIn(draftStatuses);
+    setIsReflectionModalOpen(true);
+  }
+
+  async function skipReflection() {
+    setReflectionText("");
+    setIsReflectionModalOpen(false);
+  }
 
   return {
     isLoading,
     saveState,
     data,
     history,
-    dailyNote,
-    setDailyNote,
-    energy,
-    setEnergy,
+    draftStatuses,
     reflectionText,
     setReflectionText,
-    reflectionPeriod,
-    setReflectionPeriod,
-    reflectionMessage,
-    setReflectionMessage,
-    saveDailyNote: async () => saveDailyNote(dailyNote, energy),
-    setStepStatus: async (stepId: string, status: "completed" | "partial" | "skipped") =>
-      setStepStatus(stepId, status, dailyNote, energy),
+    isReflectionModalOpen,
+    toggleTaskStatus,
+    completeCheckIn,
+    skipReflection,
     saveReflection: async () => {
-      await saveReflection(reflectionPeriod, reflectionText);
+      if (reflectionText.trim()) {
+        await saveReflection(reflectionText);
+      }
       setReflectionText("");
-      setReflectionMessage("Reflection saved. You are not starting over.");
+      setIsReflectionModalOpen(false);
     },
     enableGentleMode
   };
 }
-
