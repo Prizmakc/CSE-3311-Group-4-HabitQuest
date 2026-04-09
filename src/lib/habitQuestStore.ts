@@ -7,7 +7,6 @@ const STORAGE_KEY = "habitquest.local-data.v1";
 export const initialHabitQuestData: HabitQuestData = {
   goals: [],
   checkIns: [],
-  reflections: [],
   gentleModeEnabled: false
 };
 
@@ -19,12 +18,43 @@ export async function loadHabitQuestData() {
   }
 
   try {
-    const parsed = JSON.parse(raw) as HabitQuestData;
+    const parsed = JSON.parse(raw) as {
+      goals?: HabitQuestData["goals"];
+      checkIns?: Array<{
+        date: string;
+        statuses?: Record<string, "completed" | "partial" | "skipped">;
+        note?: string;
+        reflection?: string;
+      }>;
+      reflections?: Array<{ createdAt: string; text: string }>;
+      gentleModeEnabled?: boolean;
+    };
+    const migratedCheckIns = (parsed.checkIns ?? []).map((checkIn) => ({
+      date: checkIn.date,
+      statuses: checkIn.statuses ?? {},
+      reflection: checkIn.reflection ?? checkIn.note ?? undefined
+    }));
+
+    for (const legacyReflection of parsed.reflections ?? []) {
+      const dateKey = legacyReflection.createdAt.slice(0, 10);
+      const existing = migratedCheckIns.find((checkIn) => checkIn.date === dateKey);
+
+      if (existing) {
+        existing.reflection = existing.reflection
+          ? `${existing.reflection}\n\n${legacyReflection.text}`
+          : legacyReflection.text;
+      } else {
+        migratedCheckIns.push({
+          date: dateKey,
+          statuses: {},
+          reflection: legacyReflection.text
+        });
+      }
+    }
 
     return {
       goals: parsed.goals ?? [],
-      checkIns: parsed.checkIns ?? [],
-      reflections: parsed.reflections ?? [],
+      checkIns: migratedCheckIns,
       gentleModeEnabled: parsed.gentleModeEnabled ?? false
     };
   } catch {
@@ -80,24 +110,13 @@ export function createDemoHabitQuestData(): HabitQuestData {
           "step-demo-1": "completed",
           "step-demo-2": "partial"
         },
-        note: "A lighter day still helped.",
-        energy: "steady"
+        reflection: "A lighter day still helped."
       },
       {
         date: yesterdayKey,
         statuses: {
           "step-demo-1": "completed"
-        },
-        note: "",
-        energy: "good"
-      }
-    ],
-    reflections: [
-      {
-        id: "reflection-demo-1",
-        createdAt: now.toISOString(),
-        period: "weekly",
-        text: "Shorter routines work better when class gets busy."
+        }
       }
     ],
     gentleModeEnabled: false

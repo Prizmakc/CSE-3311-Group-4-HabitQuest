@@ -1,76 +1,76 @@
-import { Pressable, Text, TextInput, View } from "react-native";
+import {
+  Keyboard,
+  KeyboardAvoidingView,
+  Modal,
+  Platform,
+  Pressable,
+  Text,
+  TextInput,
+  View
+} from "react-native";
 
-import { Reflection } from "../../types/habitquest";
 import { homeStyles } from "./styles";
 
 export function ReflectionCard({
-  reflectionPeriod,
-  setReflectionPeriod,
+  visible,
+  gentleModeEnabled,
   reflectionText,
   setReflectionText,
-  reflectionMessage,
+  title = "Quick reflection (optional)",
+  bodyText,
+  cancelLabel = "Skip",
+  saveLabel = "Save reflection",
+  onCancel,
   onSaveReflection
 }: {
-  reflectionPeriod: Reflection["period"];
-  setReflectionPeriod: (period: Reflection["period"]) => void;
+  visible: boolean;
+  gentleModeEnabled: boolean;
   reflectionText: string;
   setReflectionText: (text: string) => void;
-  reflectionMessage: string;
+  title?: string;
+  bodyText?: string;
+  cancelLabel?: string;
+  saveLabel?: string;
+  onCancel: () => void;
   onSaveReflection: () => void;
 }) {
   return (
-    <View style={homeStyles.sectionCard}>
-      <Text style={homeStyles.sectionTitle}>Reflection</Text>
-      <Text style={homeStyles.sectionBody}>
-        Keep it short. Reflection should feel like re-entry, not homework.
-      </Text>
-      <View style={homeStyles.toggleRow}>
-        <Pressable
-          onPress={() => setReflectionPeriod("daily")}
-          style={[
-            homeStyles.toggleButton,
-            reflectionPeriod === "daily" && homeStyles.toggleButtonActive
-          ]}
+    <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
+      <Pressable style={homeStyles.modalBackdrop} onPress={Keyboard.dismiss}>
+        <KeyboardAvoidingView
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          style={homeStyles.modalWrap}
         >
-          <Text
-            style={[
-              homeStyles.toggleButtonText,
-              reflectionPeriod === "daily" && homeStyles.toggleButtonTextActive
-            ]}
-          >
-            Daily
-          </Text>
-        </Pressable>
-        <Pressable
-          onPress={() => setReflectionPeriod("weekly")}
-          style={[
-            homeStyles.toggleButton,
-            reflectionPeriod === "weekly" && homeStyles.toggleButtonActive
-          ]}
-        >
-          <Text
-            style={[
-              homeStyles.toggleButtonText,
-              reflectionPeriod === "weekly" && homeStyles.toggleButtonTextActive
-            ]}
-          >
-            Weekly
-          </Text>
-        </Pressable>
-      </View>
-      <TextInput
-        placeholder="What worked? What felt hard? What is one smaller next step?"
-        placeholderTextColor="#6E7E76"
-        style={[homeStyles.input, homeStyles.reflectionInput]}
-        multiline
-        value={reflectionText}
-        onChangeText={setReflectionText}
-      />
-      {reflectionMessage ? <Text style={homeStyles.successText}>{reflectionMessage}</Text> : null}
-      <Pressable onPress={onSaveReflection} style={homeStyles.primaryAction}>
-        <Text style={homeStyles.primaryActionText}>Save reflection</Text>
+          <Pressable onPress={() => {}} style={homeStyles.modalCard}>
+            <Text style={homeStyles.modalTitle}>{title}</Text>
+            <Text style={homeStyles.modalBody}>
+              {bodyText ??
+                (gentleModeEnabled
+                  ? "Anything worth noting?"
+                  : "What worked? What felt hard? What&apos;s one small next step?")}
+            </Text>
+            <TextInput
+              placeholder="Only if you want to."
+              placeholderTextColor="#6E7E76"
+              style={[homeStyles.input, homeStyles.reflectionInput]}
+              multiline
+              value={reflectionText}
+              onChangeText={setReflectionText}
+              returnKeyType="done"
+              blurOnSubmit
+              onSubmitEditing={Keyboard.dismiss}
+            />
+            <View style={homeStyles.modalActions}>
+              <Pressable onPress={onCancel} style={homeStyles.secondaryOutlineCompact}>
+                <Text style={homeStyles.secondaryOutlineText}>{cancelLabel}</Text>
+              </Pressable>
+              <Pressable onPress={onSaveReflection} style={homeStyles.primaryActionCompact}>
+                <Text style={homeStyles.primaryActionText}>{saveLabel}</Text>
+              </Pressable>
+            </View>
+          </Pressable>
+        </KeyboardAvoidingView>
       </Pressable>
-    </View>
+    </Modal>
   );
 }
-

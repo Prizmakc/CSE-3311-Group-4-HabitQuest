@@ -1,104 +1,102 @@
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
 import { GoalStepWithGoal } from "../../domain/habitQuestSelectors";
-import { DailyCheckIn, StepStatus } from "../../types/habitquest";
-import { StatusButton } from "./StatusButton";
+import { StepStatus } from "../../types/habitquest";
 import { homeStyles } from "./styles";
+
+function getStatusLabel(status: StepStatus | null) {
+  if (status === "completed") {
+    return "Done";
+  }
+
+  if (status === "partial") {
+    return "Partial";
+  }
+
+  if (status === "skipped") {
+    return "Skip";
+  }
+
+  return "Tap to check in";
+}
 
 export function DailyCheckInCard({
   allSteps,
-  todayCheckIn,
-  energy,
-  setEnergy,
-  dailyNote,
-  setDailyNote,
+  draftStatuses,
   saveState,
-  onSetStepStatus,
-  onSaveDailyNote
+  onToggleTaskStatus,
+  onCompleteCheckIn
 }: {
   allSteps: GoalStepWithGoal[];
-  todayCheckIn: DailyCheckIn | null;
-  energy: DailyCheckIn["energy"];
-  setEnergy: (value: DailyCheckIn["energy"]) => void;
-  dailyNote: string;
-  setDailyNote: (value: string) => void;
+  draftStatuses: Record<string, StepStatus>;
   saveState: "idle" | "saving";
-  onSetStepStatus: (stepId: string, status: StepStatus) => void;
-  onSaveDailyNote: () => void;
+  onToggleTaskStatus: (stepId: string) => void;
+  onCompleteCheckIn: () => void;
 }) {
+  const hasTasks = allSteps.length > 0;
+
   return (
     <View style={homeStyles.sectionCard}>
       <Text style={homeStyles.sectionTitle}>Today&apos;s check-in</Text>
       <Text style={homeStyles.sectionBody}>
-        Open the app, mark what happened, and move on with clarity.
+        Tap each step until it matches what happened today, then finish the check-in.
       </Text>
-      {allSteps.length === 0 ? (
-        <Text style={homeStyles.emptyText}>Create a goal first to unlock daily check-ins.</Text>
-      ) : (
+      {hasTasks ? (
         allSteps.map((step) => {
-          const activeStatus = todayCheckIn?.statuses[step.id];
+          const status = draftStatuses[step.id] ?? null;
 
           return (
-            <View key={step.id} style={homeStyles.checkInRow}>
-              <View style={homeStyles.checkInCopy}>
-                <Text style={homeStyles.checkInStep}>{step.title}</Text>
-                <Text style={homeStyles.checkInGoal}>{step.goalTitle}</Text>
+            <Pressable
+              key={step.id}
+              onPress={() => onToggleTaskStatus(step.id)}
+              style={({ pressed }) => [
+                homeStyles.taskRow,
+                status === "completed" && homeStyles.taskRowCompleted,
+                status === "partial" && homeStyles.taskRowPartial,
+                status === "skipped" && homeStyles.taskRowSkipped,
+                pressed && homeStyles.buttonPressed
+              ]}
+            >
+              <View style={homeStyles.taskRowCopy}>
+                <Text style={homeStyles.taskRowTitle}>{step.title}</Text>
+                <Text style={homeStyles.taskRowMeta}>{step.goalTitle}</Text>
               </View>
-              <View style={homeStyles.statusButtonRow}>
-                <StatusButton
-                  label="Done"
-                  active={activeStatus === "completed"}
-                  onPress={() => onSetStepStatus(step.id, "completed")}
-                />
-                <StatusButton
-                  label="Partial"
-                  active={activeStatus === "partial"}
-                  onPress={() => onSetStepStatus(step.id, "partial")}
-                />
-                <StatusButton
-                  label="Skip"
-                  active={activeStatus === "skipped"}
-                  onPress={() => onSetStepStatus(step.id, "skipped")}
-                />
+              <View
+                style={[
+                  homeStyles.taskStateBadge,
+                  status === "completed" && homeStyles.taskStateBadgeCompleted,
+                  status === "partial" && homeStyles.taskStateBadgePartial,
+                  status === "skipped" && homeStyles.taskStateBadgeSkipped
+                ]}
+              >
+                <Text
+                  style={[
+                    homeStyles.taskStateBadgeText,
+                    status !== null && homeStyles.taskStateBadgeTextActive
+                  ]}
+                >
+                  {getStatusLabel(status)}
+                </Text>
               </View>
-            </View>
+            </Pressable>
           );
         })
+      ) : (
+        <Text style={homeStyles.emptyText}>Create a goal first to unlock daily check-ins.</Text>
       )}
-      <Text style={homeStyles.inputLabel}>Energy</Text>
-      <View style={homeStyles.energyRow}>
-        {(["low", "steady", "good"] as const).map((option) => (
-          <Pressable
-            key={option}
-            onPress={() => setEnergy(option)}
-            style={({ pressed }) => [
-              homeStyles.energyChip,
-              energy === option && homeStyles.energyChipActive,
-              pressed && homeStyles.buttonPressed
-            ]}
-          >
-            <Text
-              style={[homeStyles.energyChipText, energy === option && homeStyles.energyChipTextActive]}
-            >
-              {option}
-            </Text>
-          </Pressable>
-        ))}
-      </View>
-      <TextInput
-        placeholder="Optional note about what helped or got in the way"
-        placeholderTextColor="#6E7E76"
-        style={[homeStyles.input, homeStyles.noteInput]}
-        multiline
-        value={dailyNote}
-        onChangeText={setDailyNote}
-      />
-      <Pressable onPress={onSaveDailyNote} style={homeStyles.secondaryOutline}>
-        <Text style={homeStyles.secondaryOutlineText}>
-          {saveState === "saving" ? "Saving..." : "Save check-in note"}
+      <Pressable
+        onPress={onCompleteCheckIn}
+        disabled={!hasTasks || saveState === "saving"}
+        style={({ pressed }) => [
+          homeStyles.primaryAction,
+          (!hasTasks || saveState === "saving") && homeStyles.buttonDisabled,
+          pressed && homeStyles.buttonPressed
+        ]}
+      >
+        <Text style={homeStyles.primaryActionText}>
+          {saveState === "saving" ? "Saving..." : "Complete Check-in"}
         </Text>
       </Pressable>
     </View>
   );
 }
-

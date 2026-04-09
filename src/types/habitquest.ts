@@ -18,21 +18,11 @@ export type Goal = {
 export type DailyCheckIn = {
   date: string;
   statuses: Record<string, StepStatus>;
-  note: string;
-  energy: "low" | "steady" | "good" | "";
-};
-
-export type Reflection = {
-  id: string;
-  createdAt: string;
-  period: "daily" | "weekly";
-  text: string;
+  reflection?: string;
 };
 
 export type HabitQuestData = {
   goals: Goal[];
   checkIns: DailyCheckIn[];
-  reflections: Reflection[];
   gentleModeEnabled: boolean;
 };
-

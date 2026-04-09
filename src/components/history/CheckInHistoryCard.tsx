@@ -1,5 +1,6 @@
 import { Text, View } from "react-native";
 
+import { formatHistoryDate } from "../../domain/habitQuestHistory";
 import { DailyCheckIn } from "../../types/habitquest";
 import { historyStyles } from "./styles";
 
@@ -11,20 +12,12 @@ export function CheckInHistoryCard({ checkIns }: { checkIns: DailyCheckIn[] }) {
   return (
     <View style={historyStyles.sectionCard}>
       <Text style={historyStyles.sectionTitle}>Recent check-ins</Text>
-      <Text style={historyStyles.sectionBody}>
-        A short timeline of what happened, without turning it into a scoreboard.
-      </Text>
       {checkIns.length === 0 ? (
         <Text style={historyStyles.emptyText}>No check-ins yet. Your first one will appear here.</Text>
       ) : (
         checkIns.map((checkIn) => (
           <View key={checkIn.date} style={historyStyles.historyItem}>
-            <View style={historyStyles.historyHeader}>
-              <Text style={historyStyles.historyDate}>{checkIn.date}</Text>
-              <Text style={historyStyles.historyEnergy}>
-                {checkIn.energy ? `Energy: ${checkIn.energy}` : "No energy note"}
-              </Text>
-            </View>
+            <Text style={historyStyles.historyDate}>{formatHistoryDate(checkIn.date)}</Text>
             <View style={historyStyles.statusRow}>
               <View style={historyStyles.statusPill}>
                 <Text style={historyStyles.statusPillText}>
@@ -42,11 +35,10 @@ export function CheckInHistoryCard({ checkIns }: { checkIns: DailyCheckIn[] }) {
                 </Text>
               </View>
             </View>
-            {checkIn.note ? <Text style={historyStyles.noteText}>{checkIn.note}</Text> : null}
+            {checkIn.reflection ? <Text style={historyStyles.noteText}>{checkIn.reflection}</Text> : null}
           </View>
         ))
       )}
     </View>
   );
 }
-

@@ -12,7 +12,6 @@ import {
   Goal,
   GoalStep,
   HabitQuestData,
-  Reflection,
   StepStatus
 } from "../types/habitquest";
 import { getTodayCheckIn, todayDateKey } from "../domain/habitQuestSelectors";
@@ -24,19 +23,24 @@ type CreateGoalInput = {
   steps: GoalStep[];
 };
 
+type UpdateGoalInput = {
+  id: string;
+  title: string;
+  why: string;
+  reward: string;
+  steps: GoalStep[];
+};
+
 type HabitQuestDataContextValue = {
   isLoading: boolean;
   saveState: "idle" | "saving";
   data: HabitQuestData | null;
   createGoal: (input: CreateGoalInput) => Promise<void>;
-  setStepStatus: (
-    stepId: string,
-    status: StepStatus,
-    note: string,
-    energy: DailyCheckIn["energy"]
-  ) => Promise<void>;
-  saveDailyNote: (note: string, energy: DailyCheckIn["energy"]) => Promise<void>;
-  saveReflection: (period: Reflection["period"], text: string) => Promise<void>;
+  updateGoal: (input: UpdateGoalInput) => Promise<void>;
+  deleteGoal: (goalId: string) => Promise<void>;
+  saveCheckIn: (statuses: Record<string, StepStatus>) => Promise<void>;
+  saveReflection: (text: string) => Promise<void>;
+  updateReflectionForDate: (date: string, text: string) => Promise<void>;
   enableGentleMode: () => Promise<void>;
   disableGentleMode: () => Promise<void>;
   seedDemoData: () => Promise<void>;
@@ -49,7 +53,6 @@ function emptyData(): HabitQuestData {
   return {
     goals: [],
     checkIns: [],
-    reflections: [],
     gentleModeEnabled: false
   };
 }
@@ -103,12 +106,48 @@ export function HabitQuestDataProvider({ children }: { children: ReactNode }) {
     });
   }
 
-  async function setStepStatus(
-    stepId: string,
-    status: StepStatus,
-    note: string,
-    energy: DailyCheckIn["energy"]
-  ) {
+  async function updateGoal(input: UpdateGoalInput) {
+    if (!data) {
+      return;
+    }
+
+    await persist({
+      ...data,
+      goals: data.goals.map((goal) =>
+        goal.id === input.id
+          ? {
+              ...goal,
+              title: input.title.trim(),
+              why: input.why.trim(),
+              reward: input.reward.trim(),
+              steps: input.steps
+            }
+          : goal
+      )
+    });
+  }
+
+  async function deleteGoal(goalId: string) {
+    if (!data) {
+      return;
+    }
+
+    const goalToDelete = data.goals.find((goal) => goal.id === goalId);
+    const stepIds = new Set(goalToDelete?.steps.map((step) => step.id) ?? []);
+
+    await persist({
+      ...data,
+      goals: data.goals.filter((goal) => goal.id !== goalId),
+      checkIns: data.checkIns.map((checkIn) => ({
+        ...checkIn,
+        statuses: Object.fromEntries(
+          Object.entries(checkIn.statuses).filter(([stepId]) => !stepIds.has(stepId))
+        )
+      }))
+    });
+  }
+
+  async function saveCheckIn(statuses: Record<string, StepStatus>) {
     if (!data) {
       return;
     }
@@ -118,20 +157,11 @@ export function HabitQuestDataProvider({ children }: { children: ReactNode }) {
     const nextCheckIn: DailyCheckIn = existing
       ? {
           ...existing,
-          statuses: {
-            ...existing.statuses,
-            [stepId]: status
-          },
-          note,
-          energy
+          statuses
         }
       : {
           date: today,
-          statuses: {
-            [stepId]: status
-          },
-          note,
-          energy
+          statuses
         };
 
     const remaining = data.checkIns.filter((checkIn) => checkIn.date !== today);
@@ -141,7 +171,7 @@ export function HabitQuestDataProvider({ children }: { children: ReactNode }) {
     });
   }
 
-  async function saveDailyNote(note: string, energy: DailyCheckIn["energy"]) {
+  async function saveReflection(text: string) {
     if (!data) {
       return;
     }
@@ -151,14 +181,12 @@ export function HabitQuestDataProvider({ children }: { children: ReactNode }) {
     const nextCheckIn: DailyCheckIn = existing
       ? {
           ...existing,
-          note,
-          energy
+          reflection: text.trim() || undefined
         }
       : {
           date: today,
           statuses: {},
-          note,
-          energy
+          reflection: text.trim() || undefined
         };
 
     const remaining = data.checkIns.filter((checkIn) => checkIn.date !== today);
@@ -168,21 +196,21 @@ export function HabitQuestDataProvider({ children }: { children: ReactNode }) {
     });
   }
 
-  async function saveReflection(period: Reflection["period"], text: string) {
-    if (!data || !text.trim()) {
+  async function updateReflectionForDate(date: string, text: string) {
+    if (!data) {
       return;
     }
 
-    const nextReflection: Reflection = {
-      id: `${Date.now()}`,
-      createdAt: new Date().toISOString(),
-      period,
-      text: text.trim()
-    };
-
     await persist({
       ...data,
-      reflections: [nextReflection, ...data.reflections]
+      checkIns: data.checkIns.map((checkIn) =>
+        checkIn.date === date
+          ? {
+              ...checkIn,
+              reflection: text.trim() || undefined
+            }
+          : checkIn
+      )
     });
   }
 
@@ -227,9 +255,11 @@ export function HabitQuestDataProvider({ children }: { children: ReactNode }) {
       saveState,
       data,
       createGoal,
-      setStepStatus,
-      saveDailyNote,
+      updateGoal,
+      deleteGoal,
+      saveCheckIn,
       saveReflection,
+      updateReflectionForDate,
       enableGentleMode,
       disableGentleMode,
       seedDemoData,
@@ -250,4 +280,3 @@ export function useHabitQuestData() {
 
   return context;
 }
-

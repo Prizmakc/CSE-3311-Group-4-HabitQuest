@@ -165,6 +165,11 @@ export const historyStyles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20
   },
+  editAction: {
+    color: "#49655B",
+    fontSize: 13,
+    fontWeight: "700"
+  },
   emptyText: {
     color: "#7C897F",
     fontSize: 14,

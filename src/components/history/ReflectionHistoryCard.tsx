@@ -1,26 +1,34 @@
-import { Text, View } from "react-native";
+import { Pressable, Text, View } from "react-native";
 
-import { formatReflectionDate } from "../../domain/habitQuestHistory";
-import { Reflection } from "../../types/habitquest";
+import { formatHistoryDate } from "../../domain/habitQuestHistory";
 import { historyStyles } from "./styles";
 
-export function ReflectionHistoryCard({ reflections }: { reflections: Reflection[] }) {
+export function ReflectionHistoryCard({
+  reflections,
+  onEditReflection
+}: {
+  reflections: Array<{ date: string; text: string }>;
+  onEditReflection: (date: string, text: string) => void;
+}) {
   return (
     <View style={historyStyles.sectionCard}>
       <Text style={historyStyles.sectionTitle}>Recent reflections</Text>
-      <Text style={historyStyles.sectionBody}>
-        Use these to notice what supports momentum and what needs to feel smaller.
-      </Text>
       {reflections.length === 0 ? (
         <Text style={historyStyles.emptyText}>
           No reflections yet. A short note after a difficult day is enough.
         </Text>
       ) : (
         reflections.map((reflection) => (
-          <View key={reflection.id} style={historyStyles.historyItem}>
-            <Text style={historyStyles.reflectionMeta}>
-              {reflection.period} • {formatReflectionDate(reflection)}
-            </Text>
+          <View key={`${reflection.date}-${reflection.text}`} style={historyStyles.historyItem}>
+            <View style={historyStyles.historyHeader}>
+              <Text style={historyStyles.reflectionMeta}>{formatHistoryDate(reflection.date)}</Text>
+              <Pressable
+                onPress={() => onEditReflection(reflection.date, reflection.text)}
+                hitSlop={8}
+              >
+                <Text style={historyStyles.editAction}>Edit</Text>
+              </Pressable>
+            </View>
             <Text style={historyStyles.reflectionText}>{reflection.text}</Text>
           </View>
         ))
@@ -28,4 +36,3 @@ export function ReflectionHistoryCard({ reflections }: { reflections: Reflection
     </View>
   );
 }
-

@@ -37,6 +37,7 @@ export default function AppLayout() {
         <Tabs.Screen name="index" options={{ title: "Today" }} />
         <Tabs.Screen name="history" options={{ title: "History" }} />
         <Tabs.Screen name="goals" options={{ title: "Goals" }} />
+        <Tabs.Screen name="profile" options={{ title: "Profile" }} />
       </Tabs>
     </HabitQuestDataProvider>
   );

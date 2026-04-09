@@ -29,16 +29,9 @@ export const homeStyles = StyleSheet.create({
     backgroundColor: "#20443A",
     borderRadius: 24,
     padding: 18,
-    gap: 18
-  },
-  heroTopRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    gap: 12,
-    alignItems: "flex-start"
+    gap: 10
   },
   heroCopy: {
-    flex: 1,
     gap: 6
   },
   eyebrow: {
@@ -59,42 +52,14 @@ export const homeStyles = StyleSheet.create({
     fontSize: 15,
     lineHeight: 21
   },
-  signOutButton: {
-    backgroundColor: "#E8EFE6",
+  heroModeTag: {
+    alignSelf: "flex-start",
+    backgroundColor: "#31594C",
     borderRadius: 999,
-    paddingHorizontal: 14,
-    paddingVertical: 10,
-    alignSelf: "flex-start"
-  },
-  signOutButtonText: {
-    color: "#1E362F",
-    fontSize: 13,
-    fontWeight: "700"
-  },
-  heroMetricsRow: {
-    flexDirection: "row",
-    gap: 10
-  },
-  metricPill: {
-    flex: 1,
-    backgroundColor: "#2D5649",
-    borderRadius: 18,
-    padding: 12,
-    gap: 4,
-    minWidth: 0
-  },
-  metricLabel: {
-    color: "#C8D8D0",
-    fontSize: 12
-  },
-  metricValue: {
-    color: "#FFFFFF",
-    fontSize: 18,
-    fontWeight: "700"
-  },
-  metricValueCompact: {
-    color: "#FFFFFF",
-    fontSize: 16,
+    paddingHorizontal: 12,
+    paddingVertical: 8,
+    color: "#F1F5F0",
+    fontSize: 12,
     fontWeight: "700"
   },
   banner: {
@@ -212,6 +177,14 @@ export const homeStyles = StyleSheet.create({
     paddingVertical: 10,
     gap: 10
   },
+  editStepRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10
+  },
+  editStepInput: {
+    flex: 1
+  },
   stepListText: {
     color: "#29453B",
     fontSize: 14,
@@ -242,6 +215,13 @@ export const homeStyles = StyleSheet.create({
     paddingVertical: 14,
     alignItems: "center"
   },
+  primaryActionCompact: {
+    flex: 1,
+    backgroundColor: "#274B3F",
+    borderRadius: 14,
+    paddingVertical: 14,
+    alignItems: "center"
+  },
   primaryActionText: {
     color: "#FDFCF9",
     fontSize: 15,
@@ -265,6 +245,65 @@ export const homeStyles = StyleSheet.create({
     borderRadius: 16,
     padding: 12,
     gap: 12
+  },
+  taskRow: {
+    backgroundColor: "#F7F3EB",
+    borderRadius: 18,
+    padding: 14,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: 12,
+    borderWidth: 1,
+    borderColor: "#E8E0D4"
+  },
+  taskRowCompleted: {
+    backgroundColor: "#DDE9E3",
+    borderColor: "#6C8E7F"
+  },
+  taskRowPartial: {
+    backgroundColor: "#E9EFE8",
+    borderColor: "#B2C6BB"
+  },
+  taskRowSkipped: {
+    backgroundColor: "#F3EEE4",
+    borderColor: "#D8CFC1"
+  },
+  taskRowCopy: {
+    flex: 1,
+    gap: 4
+  },
+  taskRowTitle: {
+    color: "#1E362F",
+    fontSize: 16,
+    fontWeight: "700"
+  },
+  taskRowMeta: {
+    color: "#66766E",
+    fontSize: 13
+  },
+  taskStateBadge: {
+    borderRadius: 999,
+    backgroundColor: "#ECE5D8",
+    paddingHorizontal: 12,
+    paddingVertical: 9
+  },
+  taskStateBadgeCompleted: {
+    backgroundColor: "#365F51"
+  },
+  taskStateBadgePartial: {
+    backgroundColor: "#6E8D80"
+  },
+  taskStateBadgeSkipped: {
+    backgroundColor: "#A99C8C"
+  },
+  taskStateBadgeText: {
+    color: "#355247",
+    fontWeight: "700",
+    fontSize: 12
+  },
+  taskStateBadgeTextActive: {
+    color: "#FCFBF7"
   },
   checkInCopy: {
     gap: 4
@@ -338,6 +377,14 @@ export const homeStyles = StyleSheet.create({
     paddingVertical: 12,
     alignItems: "center"
   },
+  secondaryOutlineCompact: {
+    flex: 1,
+    borderColor: "#C7B8A4",
+    borderWidth: 1,
+    borderRadius: 14,
+    paddingVertical: 12,
+    alignItems: "center"
+  },
   secondaryOutlineText: {
     color: "#5B5144",
     fontWeight: "700",
@@ -368,11 +415,62 @@ export const homeStyles = StyleSheet.create({
     minHeight: 110,
     textAlignVertical: "top"
   },
+  modalBackdrop: {
+    flex: 1,
+    backgroundColor: "rgba(24, 31, 27, 0.35)",
+    justifyContent: "center",
+    paddingHorizontal: 18
+  },
+  modalWrap: {
+    width: "100%"
+  },
+  modalCard: {
+    backgroundColor: "#FCFBF7",
+    borderRadius: 24,
+    padding: 18,
+    gap: 12,
+    borderWidth: 1,
+    borderColor: "#E8E0D4"
+  },
+  modalTitle: {
+    color: "#1E362F",
+    fontSize: 22,
+    fontWeight: "700"
+  },
+  modalBody: {
+    color: "#5E6F66",
+    fontSize: 14,
+    lineHeight: 20
+  },
+  modalActions: {
+    flexDirection: "row",
+    gap: 10
+  },
   goalCard: {
     backgroundColor: "#F6F1E8",
     borderRadius: 16,
     padding: 14,
     gap: 8
+  },
+  goalCardHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 12,
+    alignItems: "center"
+  },
+  goalCardActions: {
+    flexDirection: "row",
+    gap: 12
+  },
+  goalCardActionText: {
+    color: "#5B5144",
+    fontSize: 12,
+    fontWeight: "700"
+  },
+  goalCardActionDangerText: {
+    color: "#9D4A34",
+    fontSize: 12,
+    fontWeight: "700"
   },
   goalCardTitle: {
     color: "#1E362F",
@@ -417,6 +515,15 @@ export const homeStyles = StyleSheet.create({
   devButtonText: {
     color: "#6B6257",
     fontSize: 13,
+    fontWeight: "700"
+  },
+  textDangerButton: {
+    alignItems: "center",
+    paddingVertical: 8
+  },
+  textDangerButtonText: {
+    color: "#9D4A34",
+    fontSize: 14,
     fontWeight: "700"
   }
 });

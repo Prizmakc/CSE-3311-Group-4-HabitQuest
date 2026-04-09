@@ -7,6 +7,7 @@ import { AuthInput } from "../../src/components/AuthInput";
 import { supabase } from "../../src/lib/supabase";
 
 export default function SignupScreen() {
+  const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -27,7 +28,13 @@ export default function SignupScreen() {
 
     const { error: signUpError } = await supabase.auth.signUp({
       email: email.trim(),
-      password
+      password,
+      options: {
+        data: {
+          first_name: firstName.trim(),
+          firstName: firstName.trim()
+        }
+      }
     });
 
     setIsSubmitting(false);
@@ -48,6 +55,11 @@ export default function SignupScreen() {
         <Text style={styles.subtitle}>Start building consistent progress</Text>
 
         <View style={styles.form}>
+          <AuthInput
+            placeholder="First name"
+            value={firstName}
+            onChangeText={setFirstName}
+          />
           <AuthInput
             placeholder="Email"
             keyboardType="email-address"
@@ -72,13 +84,18 @@ export default function SignupScreen() {
 
           <Pressable
             disabled={
-              isSubmitting || !email || password.length < 6 || confirmPassword.length < 6
+              isSubmitting ||
+              !firstName.trim() ||
+              !email ||
+              password.length < 6 ||
+              confirmPassword.length < 6
             }
             onPress={onSignup}
             style={({ pressed }) => [
               styles.primaryButton,
               (pressed ||
                 isSubmitting ||
+                !firstName.trim() ||
                 !email ||
                 password.length < 6 ||
                 confirmPassword.length < 6) &&

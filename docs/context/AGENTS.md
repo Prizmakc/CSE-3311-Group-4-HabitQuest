@@ -1,172 +1,278 @@
 # HabitQuest Agent Operating Guide
 
-This file is the primary handoff and operating contract for any new Codex/agent session on this repository.
+This is the primary source of truth for new Codex or ChatGPT sessions working in this repository.
 
-## 1. Mission and Product Direction
-- Product name: HabitQuest.
-- Product type: Mobile-first habit + goal execution app with light gamification.
-- Audience: Students and young professionals.
-- Core product promise: Convert vague goals into concrete daily actions, keep users accountable, and help users recover when momentum drops.
+## 1. Product intent
+- HabitQuest is a mobile-first, local-first self-improvement app.
+- Audience: students and young adults who want structure without feeling punished.
+- The product should feel like a daily action tool, not a dashboard or productivity optimizer.
+- Core promise: turn vague goals into manageable daily actions, reduce pressure, and help users maintain momentum.
 
-### Non-negotiable differentiation pillars
-- Goal -> concrete steps translation.
-- Fast daily accountability loop.
-- Gentle Mode for burnout/recovery.
-- Visible progress (streaks/completion) with non-punitive messaging.
+## 2. Product tone and design direction
+- calm
+- supportive
+- direct
+- low-pressure
+- structured but forgiving
 
-If future changes weaken these pillars, flag before implementing.
+Avoid drifting into:
+- generic habit tracker only
+- rigid streak-punishment app
+- noisy productivity dashboard
+- childish or over-gamified quest/RPG behavior
 
-## 2. Current Iteration Status (as of Feb 18, 2026)
-Implemented:
-- Expo React Native app scaffold.
-- TypeScript project setup.
-- Expo Router with auth route separation.
-- Supabase auth integration (email/password).
-- Auth pages: Login, Signup, Forgot Password.
-- Signup now includes Confirm Password.
-- Post-login scaffold page with demo-focused sections:
-- Goal card preview/reward concept.
-- Goal creation + step breakdown.
-- Validation special case: block save with missing required fields.
-- Daily check-in toggle.
-- Reflection text area.
-- Gentle Mode trigger simulation for missed days.
+Current visual direction:
+- soft neutral backgrounds
+- dark green emphasis
+- rounded cards
+- minimal clutter
+- secondary actions visually weaker than primary actions
 
-Not implemented yet (real backend/domain logic):
-- Persistent goal/step/check-in/reflection data model.
-- Real streak engine.
-- Real Gentle Mode trigger based on stored misses.
-- Notifications/reminders.
-- Final visual design system.
+## 3. Current navigation architecture
+- Expo Router is used.
+- Authenticated users land in a bottom-tab shell in `app/(app)/_layout.tsx`.
+- Tabs:
+- `Today`
+- `History`
+- `Goals`
+- `Profile`
 
-## 3. Repository Structure and Key Files
-- `app/_layout.tsx`: Root layout and provider mount.
-- `app/index.tsx`: Entry redirect.
-- `app/(auth)/_layout.tsx`: Redirect authenticated users away from auth pages.
-- `app/(auth)/login.tsx`: Login UI + `signInWithPassword`.
-- `app/(auth)/signup.tsx`: Signup UI + confirm password + `signUp`.
-- `app/(auth)/forgot-password.tsx`: Password reset UI + `resetPasswordForEmail`.
-- `app/(app)/_layout.tsx`: Route protection for authenticated area.
-- `app/(app)/index.tsx`: Current post-login product scaffold for screenshots.
-- `src/lib/supabase.ts`: Supabase client creation.
-- `src/config/supabaseConfig.ts`: Repo-level Supabase config fallback.
-- `src/providers/AuthProvider.tsx`: Session bootstrap + auth state listener.
-- `src/components/AuthInput.tsx`: Shared auth input UI primitive.
-- `docs/context/spec.txt`: Extracted project context/spec.
-- `docs/context/HabitQuest_Project_Context_for_Codex.pdf`: Original context document.
+Visible tabs are the active navigation model.
+Swipe navigation was considered earlier but is not implemented and is not the current navigation pattern.
 
-## 4. Stack Decisions
-- Frontend: React Native (Expo).
-- Language: TypeScript.
-- Navigation: Expo Router.
-- Auth/backend: Supabase (email/password only for now).
-- Social auth (Google/Apple): Explicitly deferred.
+## 4. Current section ownership
+- `Today`
+- hero
+- gentle mode prompt when applicable
+- task list for check-in
+- single primary CTA: `Complete Check-in`
+- optional reflection modal after check-in
 
-## 5. Auth Contracts
-Use these Supabase contracts:
-- Login: `supabase.auth.signInWithPassword({ email, password })`
-- Signup: `supabase.auth.signUp({ email, password })`
-- Forgot password: `supabase.auth.resetPasswordForEmail(email)`
-- Logout: `supabase.auth.signOut()`
-- Session bootstrap: `supabase.auth.getSession()`
-- Session listener: `supabase.auth.onAuthStateChange(...)`
+- `History`
+- trend summary
+- recent check-ins
+- recent reflections
 
-### Email confirmation behavior
-- Team temporarily has email confirmation disabled in Supabase for easier shared testing.
-- Signup success copy should assume immediate usability unless settings change.
+- `Goals`
+- saved goals
+- create goal flow
+- edit/delete goal flow
+- step rename/delete inside goal edit modal
+- dev-only local utilities under `__DEV__`
 
-## 6. Supabase Configuration Policy (Current Team Decision)
-- Team requested ability for anyone to clone and run quickly.
-- Current implementation supports both:
-- `.env` values (`EXPO_PUBLIC_SUPABASE_URL`, `EXPO_PUBLIC_SUPABASE_ANON_KEY`) and
-- fallback from `src/config/supabaseConfig.ts`.
-- Resolution order in `src/lib/supabase.ts`: env vars first, fallback file second.
+- `Profile`
+- first name
+- email
+- sign out
 
-Important:
-- Supabase `anon` key is public by design, but still rotate if leaked/misused.
-- Never commit service-role keys.
+Do not collapse the app back into one long stacked home screen.
 
-## 7. UX and Demo Requirements for Iteration 1
-Target demo behavior:
-- Create a goal and add one or more steps.
-- Show progress/streak indicator.
-- Show daily check-in affordance.
-- Show reflection affordance.
-- Include at least one special-case behavior.
+## 5. Current data and state architecture
+- Product data is local-first with `AsyncStorage`.
+- Shared authenticated product state is provided by:
+- `src/providers/HabitQuestDataProvider.tsx`
 
-Special cases currently requested for screenshots:
-1. Required field handling for goal creation
-- User tries to save goal with missing title and/or no steps.
-- App blocks save and explains missing fields.
+The provider currently owns:
+- loading persisted data
+- saving product data
+- creating goals
+- updating goals
+- deleting goals
+- saving check-ins
+- saving reflections
+- enabling/disabling Gentle Mode
+- dev-only seed/reset actions
 
-2. Gentle Mode trigger (burnout protection)
-- User misses multiple days in a row.
-- App suggests enabling Gentle Mode.
-- Gentle Mode reduces required steps temporarily.
+Section hooks:
+- `src/hooks/useHabitQuestToday.ts`
+- `src/hooks/useHabitQuestHistory.ts`
+- `src/hooks/useHabitQuestGoals.ts`
 
-## 8. Implementation Conventions
-### Naming
-- Components/types: PascalCase.
-- Variables/functions/hooks: camelCase.
-- Route files: lowercase/kebab-case where needed (e.g., `forgot-password.tsx`).
-- Route groups: `(auth)`, `(app)`.
+Removed architecture:
+- `src/hooks/useHabitQuestHome.ts` was removed and should stay removed.
 
-### File organization
-- Keep auth logic concentrated in provider + lib.
-- Keep reusable UI in `src/components`.
-- Keep screen logic inside route files until complexity justifies extraction.
+Domain files:
+- `src/domain/habitQuestSelectors.ts`
+- `src/domain/habitQuestProgress.ts`
+- `src/domain/habitQuestHistory.ts`
 
-### Code quality
-- Keep TypeScript strict compatibility.
-- Include loading and error states for async auth actions.
-- Avoid unnecessary abstractions in Iteration 1.
-- Build for screenshot/demo clarity first, then optimize.
+## 6. Current product data model
+Key current types live in:
+- `src/types/habitquest.ts`
 
-## 9. What the Next Agent Should Do First
-1. Run `npm run typecheck` and ensure no regressions.
-2. Run the app and verify auth flow with current Supabase project.
-3. Verify screenshot scenarios on iOS simulator/device:
-- Goal save blocked with missing fields.
-- Gentle Mode suggestion after simulated missed days.
-4. Start extracting scaffold state into persistent domain models (goals/steps/check-ins/reflections).
+Important current model decisions:
+- `Goal` contains a list of `GoalStep`s.
+- `DailyCheckIn` stores:
+- `date`
+- `statuses: Record<stepId, StepStatus>`
+- `reflection?: string`
+- `StepStatus` is:
+- `completed`
+- `partial`
+- `skipped`
 
-## 10. Known Gaps / Risks
-- Current post-login page is demo scaffold state, not persistent data.
-- No backend tables wired yet for goals/steps/check-ins.
-- No notification/reminder pipeline.
-- No final design system.
-- Goal card reward mechanics are conceptual and may evolve.
+Important removals:
+- the energy system has been removed from the UI and product data model
+- reflections are no longer stored as a separate top-level collection
 
-## 11. Collaboration Notes from Current User
-- User is early-stage and prioritizes tangible progress/screenshots for presentation.
-- User explicitly asked for scaffold-first implementation.
-- User requested richer AGENTS documentation so fresh sessions can continue without chat history.
-- If uncertain, prioritize producing demoable UI states that map to rubric and special cases.
+Legacy migration behavior:
+- old local data with `note` or `energy` fields is migrated/ignored safely in `src/lib/habitQuestStore.ts`
+- legacy standalone reflections are merged into `checkIn.reflection` by date key
 
-## 12. Commands and Basic Workflow
-Install:
+## 7. Main implemented user flows
+
+### Authentication
+- Login with email/password
+- Signup with:
+- first name
+- email
+- password
+- confirm password
+- Forgot password flow
+- Profile reads first name from Supabase user metadata
+
+### Today
+- task rows are tap-to-cycle:
+- default -> completed -> partial -> skipped -> default
+- one primary CTA: `Complete Check-in`
+- optional reflection appears in a modal after check-in
+- no required typing in the core flow
+- no energy selector
+- no inline note field
+- no sign-out button on Today
+
+### Gentle Mode
+- stored as `gentleModeEnabled: boolean`
+- currently global, not per-day
+- changes current-day success meaning via `isDaySuccessful(...)` in `src/domain/habitQuestProgress.ts`
+- does not modify goals permanently
+- does not rewrite historical data
+
+### Goals
+- create goal with validation
+- goal title required
+- at least one step required
+- edit goal
+- delete goal with confirmation
+- rename step
+- delete step
+- add step while editing
+
+### History
+- readable dates
+- recent check-ins
+- recent reflections
+- simple trend summary
+- no energy display
+
+### Developer utilities
+- seed local demo data
+- reset local data
+- only shown in Goals under `__DEV__`
+
+## 8. Important file paths
+
+### App shell and screens
+- `app/(app)/_layout.tsx`
+- `app/(app)/index.tsx`
+- `app/(app)/history.tsx`
+- `app/(app)/goals.tsx`
+- `app/(app)/profile.tsx`
+
+### Auth screens
+- `app/(auth)/login.tsx`
+- `app/(auth)/signup.tsx`
+- `app/(auth)/forgot-password.tsx`
+
+### Providers and storage
+- `src/providers/AuthProvider.tsx`
+- `src/providers/HabitQuestDataProvider.tsx`
+- `src/lib/supabase.ts`
+- `src/lib/habitQuestStore.ts`
+
+### Hooks
+- `src/hooks/useHabitQuestToday.ts`
+- `src/hooks/useHabitQuestHistory.ts`
+- `src/hooks/useHabitQuestGoals.ts`
+
+### Domain
+- `src/domain/habitQuestSelectors.ts`
+- `src/domain/habitQuestProgress.ts`
+- `src/domain/habitQuestHistory.ts`
+
+### Home / Goals components
+- `src/components/home/HomeHero.tsx`
+- `src/components/home/DailyCheckInCard.tsx`
+- `src/components/home/ReflectionCard.tsx`
+- `src/components/home/GoalsListCard.tsx`
+- `src/components/home/GoalComposerCard.tsx`
+- `src/components/home/GoalEditModal.tsx`
+- `src/components/home/GentleModeBanner.tsx`
+- `src/components/home/styles.ts`
+
+### History components
+- `src/components/history/HistoryHeader.tsx`
+- `src/components/history/TrendSummaryCard.tsx`
+- `src/components/history/CheckInHistoryCard.tsx`
+- `src/components/history/ReflectionHistoryCard.tsx`
+- `src/components/history/styles.ts`
+
+### Context/spec files
+- `docs/context/design-spec.md`
+- `docs/context/feature-spec.md`
+- `docs/context/habitquest_v2_spec.md`
+- `docs/context/habitquest_v3_spec.md`
+- `docs/context/habitquest-codex-handoff.md`
+
+## 9. Known limitations and technical debt
+- No Goal Details screen yet
+- No per-goal history view
+- No goal/step drag-reorder
+- No settings/notifications in Profile
+- No Supabase-backed product tables for product data yet
+- No cross-device sync
+- No motion/animation polish pass yet
+
+Behavioral caveats:
+- legacy reflections may be merged by day during migration
+- deleting a goal removes related step statuses from saved check-ins
+- there is no undo flow for goal deletion
+
+## 10. Guardrails
+- Keep the current calm, supportive tone.
+- Do not reintroduce pressure-heavy metrics into Today.
+- Do not reintroduce energy/mood friction into the core check-in flow.
+- Keep Today action-focused, History insight-focused, Goals planning-focused.
+- Keep developer utilities out of normal user-facing flows.
+- Do not move product data to Supabase yet unless explicitly requested.
+- Prefer targeted edits over broad rewrites.
+
+## 11. Recommended next priorities
+1. Build a Goal Details flow.
+2. Add per-goal recent check-ins/history.
+3. Tighten goal card actions if inline Edit/Delete feels too exposed.
+4. Review local-data migration behavior with pre-v3 users.
+5. Consider whether Gentle Mode should eventually be per-day instead of a global boolean.
+
+## 12. Local validation workflow
+Run:
+
 ```bash
 npm install
-```
-
-Typecheck:
-```bash
 npm run typecheck
-```
-
-Run Expo:
-```bash
 npx expo start
 ```
 
-WSL/iPhone tunnel fallback:
-```bash
-npx expo start --tunnel -c
-```
+Manual checks:
+- signup with first name works
+- Profile shows first name and email
+- goal create/edit/delete works
+- step rename/delete works
+- Today task rows cycle correctly
+- `Complete Check-in` opens reflection modal
+- saving/skipping reflection works cleanly
+- History shows readable dates and no energy text
+- dev utilities only appear in Goals under `__DEV__`
 
-## 13. Guardrails for Future Changes
-- Do not remove the special-case states until presentation needs are met.
-- Do not replace Supabase auth stack without explicit approval.
-- Keep route protection intact (`(auth)` vs `(app)` layouts).
-- If email confirmation is re-enabled in Supabase, update signup UX copy and flow expectations.
-- When adding persistence, keep UI behavior identical to current scaffold where possible to preserve screenshot continuity.
+At the time of this handoff:
+- `npm run typecheck` passes
