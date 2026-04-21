@@ -22,7 +22,8 @@ export default function HomeScreen() {
     completeCheckIn,
     skipReflection,
     saveReflection,
-    enableGentleMode
+    enableGentleMode,
+    disableGentleMode
   } = useHabitQuestToday();
 
   if (isLoading || !data || !history) {
@@ -40,22 +41,26 @@ export default function HomeScreen() {
     <SafeAreaView style={homeStyles.safe}>
       <ScrollView contentContainerStyle={homeStyles.container}>
         <HomeHero
-          gentleModeEnabled={data.gentleModeEnabled}
+          gentleModeEnabled={history.gentleModeActiveToday}
           daySuccessful={history.daySuccessful}
         />
 
-        {history.gentleModeSuggestion ? (
-          <GentleModeBanner
-            onEnable={() => {
-              void enableGentleMode();
-            }}
-          />
-        ) : null}
+        <GentleModeBanner
+          isActive={history.gentleModeActiveToday}
+          canDisable={history.gentleModeActiveToday}
+          onEnable={() => {
+            void enableGentleMode();
+          }}
+          onDisable={() => {
+            void disableGentleMode();
+          }}
+        />
 
         <DailyCheckInCard
           allSteps={history.allSteps}
           draftStatuses={draftStatuses}
           saveState={saveState}
+          gentleModeEnabled={history.gentleModeActiveToday}
           onToggleTaskStatus={toggleTaskStatus}
           onCompleteCheckIn={() => {
             void completeCheckIn();
@@ -65,7 +70,7 @@ export default function HomeScreen() {
 
       <ReflectionCard
         visible={isReflectionModalOpen}
-        gentleModeEnabled={data.gentleModeEnabled}
+        gentleModeEnabled={history.gentleModeActiveToday}
         reflectionText={reflectionText}
         setReflectionText={setReflectionText}
         onCancel={() => {

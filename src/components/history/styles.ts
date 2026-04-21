@@ -148,6 +148,16 @@ export const historyStyles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 12
   },
+  gentleBadge: {
+    backgroundColor: "#E2ECD9",
+    color: "#2F5A47",
+    borderRadius: 999,
+    overflow: "hidden",
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    fontSize: 12,
+    fontWeight: "700"
+  },
   noteText: {
     color: "#4F6058",
     fontSize: 14,

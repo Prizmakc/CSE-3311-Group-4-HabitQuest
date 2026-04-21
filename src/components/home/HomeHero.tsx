@@ -13,6 +13,9 @@ export function HomeHero({
     <View style={homeStyles.hero}>
       <View style={homeStyles.heroCopy}>
         <Text style={homeStyles.eyebrow}>Today</Text>
+        {gentleModeEnabled ? (
+          <Text style={homeStyles.heroModeTag}>Gentle Mode Active</Text>
+        ) : null}
         <Text style={homeStyles.heroTitle}>
           {gentleModeEnabled ? "One meaningful step is enough today." : "Keep today light."}
         </Text>

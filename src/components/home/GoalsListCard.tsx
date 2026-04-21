@@ -5,14 +5,10 @@ import { homeStyles } from "./styles";
 
 export function GoalsListCard({
   goals,
-  gentleModeEnabled,
-  onDisableGentleMode,
   onEditGoal,
   onDeleteGoal
 }: {
   goals: Goal[];
-  gentleModeEnabled: boolean;
-  onDisableGentleMode: () => void;
   onEditGoal: (goalId: string) => void;
   onDeleteGoal: (goalId: string) => void;
 }) {
@@ -23,11 +19,6 @@ export function GoalsListCard({
           <Text style={homeStyles.sectionTitle}>Your goals</Text>
           <Text style={homeStyles.sectionBody}>Meaningful goals, not endless habit clutter.</Text>
         </View>
-        {gentleModeEnabled ? (
-          <Pressable onPress={onDisableGentleMode} style={homeStyles.secondaryAction}>
-            <Text style={homeStyles.secondaryActionText}>Exit Gentle</Text>
-          </Pressable>
-        ) : null}
       </View>
       {goals.length === 0 ? (
         <Text style={homeStyles.emptyText}>No saved goals yet.</Text>

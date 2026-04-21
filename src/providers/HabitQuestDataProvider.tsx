@@ -15,6 +15,7 @@ import {
   StepStatus
 } from "../types/habitquest";
 import { getTodayCheckIn, todayDateKey } from "../domain/habitQuestSelectors";
+import { isGentleModeActiveForDate } from "../domain/habitQuestProgress";
 
 type CreateGoalInput = {
   title: string;
@@ -53,7 +54,8 @@ function emptyData(): HabitQuestData {
   return {
     goals: [],
     checkIns: [],
-    gentleModeEnabled: false
+    gentleModeEnabled: false,
+    gentleModeDate: undefined
   };
 }
 
@@ -154,14 +156,17 @@ export function HabitQuestDataProvider({ children }: { children: ReactNode }) {
 
     const today = todayDateKey();
     const existing = getTodayCheckIn(data.checkIns);
+    const completionMode = isGentleModeActiveForDate(data, today) ? "gentle" : "normal";
     const nextCheckIn: DailyCheckIn = existing
       ? {
           ...existing,
-          statuses
+          statuses,
+          completionMode
         }
       : {
           date: today,
-          statuses
+          statuses,
+          completionMode
         };
 
     const remaining = data.checkIns.filter((checkIn) => checkIn.date !== today);
@@ -221,7 +226,8 @@ export function HabitQuestDataProvider({ children }: { children: ReactNode }) {
 
     await persist({
       ...data,
-      gentleModeEnabled: true
+      gentleModeEnabled: true,
+      gentleModeDate: todayDateKey()
     });
   }
 
@@ -232,7 +238,8 @@ export function HabitQuestDataProvider({ children }: { children: ReactNode }) {
 
     await persist({
       ...data,
-      gentleModeEnabled: false
+      gentleModeEnabled: false,
+      gentleModeDate: undefined
     });
   }
 

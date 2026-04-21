@@ -54,11 +54,11 @@ export const homeStyles = StyleSheet.create({
   },
   heroModeTag: {
     alignSelf: "flex-start",
-    backgroundColor: "#31594C",
+    backgroundColor: "#E2ECD9",
     borderRadius: 999,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    color: "#F1F5F0",
+    color: "#234C3D",
     fontSize: 12,
     fontWeight: "700"
   },
@@ -66,7 +66,14 @@ export const homeStyles = StyleSheet.create({
     backgroundColor: "#F6E5C6",
     borderRadius: 18,
     padding: 16,
-    gap: 8
+    gap: 8,
+    borderWidth: 1,
+    borderColor: "#EACF98"
+  },
+  bannerActive: {
+    backgroundColor: "#E7F0E5",
+    borderColor: "#8FAE9E",
+    borderWidth: 2
   },
   bannerTitle: {
     color: "#5A3B13",
@@ -89,6 +96,16 @@ export const homeStyles = StyleSheet.create({
     fontWeight: "700",
     fontSize: 15
   },
+  gentleTargetText: {
+    alignSelf: "flex-start",
+    backgroundColor: "#D5E4D4",
+    borderRadius: 999,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    color: "#2B5545",
+    fontSize: 13,
+    fontWeight: "700"
+  },
   sectionCard: {
     backgroundColor: "#FCFBF7",
     borderRadius: 20,
@@ -96,6 +113,11 @@ export const homeStyles = StyleSheet.create({
     gap: 12,
     borderWidth: 1,
     borderColor: "#E8E0D4"
+  },
+  gentleCheckInCard: {
+    backgroundColor: "#F4FAF1",
+    borderColor: "#93B49E",
+    borderWidth: 2
   },
   sectionHeaderRow: {
     flexDirection: "row",
@@ -256,6 +278,23 @@ export const homeStyles = StyleSheet.create({
     gap: 12,
     borderWidth: 1,
     borderColor: "#E8E0D4"
+  },
+  gentleTargetChip: {
+    alignSelf: "flex-start",
+    backgroundColor: "#DCEBDA",
+    borderRadius: 999,
+    paddingHorizontal: 12,
+    paddingVertical: 8
+  },
+  gentleTargetChipText: {
+    color: "#2D5948",
+    fontSize: 13,
+    fontWeight: "700"
+  },
+  gentlePrompt: {
+    color: "#49655B",
+    fontSize: 14,
+    fontWeight: "700"
   },
   taskRowCompleted: {
     backgroundColor: "#DDE9E3",

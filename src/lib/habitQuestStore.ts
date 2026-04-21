@@ -1,13 +1,14 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { HabitQuestData } from "../types/habitquest";
+import { CompletionMode, HabitQuestData } from "../types/habitquest";
 
 const STORAGE_KEY = "habitquest.local-data.v1";
 
 export const initialHabitQuestData: HabitQuestData = {
   goals: [],
   checkIns: [],
-  gentleModeEnabled: false
+  gentleModeEnabled: false,
+  gentleModeDate: undefined
 };
 
 export async function loadHabitQuestData() {
@@ -25,14 +26,17 @@ export async function loadHabitQuestData() {
         statuses?: Record<string, "completed" | "partial" | "skipped">;
         note?: string;
         reflection?: string;
+        completionMode?: CompletionMode;
       }>;
       reflections?: Array<{ createdAt: string; text: string }>;
       gentleModeEnabled?: boolean;
+      gentleModeDate?: string;
     };
     const migratedCheckIns = (parsed.checkIns ?? []).map((checkIn) => ({
       date: checkIn.date,
       statuses: checkIn.statuses ?? {},
-      reflection: checkIn.reflection ?? checkIn.note ?? undefined
+      reflection: checkIn.reflection ?? checkIn.note ?? undefined,
+      completionMode: checkIn.completionMode ?? "normal"
     }));
 
     for (const legacyReflection of parsed.reflections ?? []) {
@@ -47,7 +51,8 @@ export async function loadHabitQuestData() {
         migratedCheckIns.push({
           date: dateKey,
           statuses: {},
-          reflection: legacyReflection.text
+          reflection: legacyReflection.text,
+          completionMode: "normal"
         });
       }
     }
@@ -55,7 +60,8 @@ export async function loadHabitQuestData() {
     return {
       goals: parsed.goals ?? [],
       checkIns: migratedCheckIns,
-      gentleModeEnabled: parsed.gentleModeEnabled ?? false
+      gentleModeEnabled: false,
+      gentleModeDate: undefined
     };
   } catch {
     return initialHabitQuestData;
@@ -110,15 +116,18 @@ export function createDemoHabitQuestData(): HabitQuestData {
           "step-demo-1": "completed",
           "step-demo-2": "partial"
         },
-        reflection: "A lighter day still helped."
+        reflection: "A lighter day still helped.",
+        completionMode: "gentle"
       },
       {
         date: yesterdayKey,
         statuses: {
           "step-demo-1": "completed"
-        }
+        },
+        completionMode: "normal"
       }
     ],
-    gentleModeEnabled: false
+    gentleModeEnabled: false,
+    gentleModeDate: undefined
   };
 }
