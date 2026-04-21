@@ -2,7 +2,7 @@ import { Pressable, Text, View } from "react-native";
 
 import { GoalStepWithGoal } from "../../domain/habitQuestSelectors";
 import { StepStatus } from "../../types/habitquest";
-import { homeStyles } from "./styles";
+import { useHomeStyles } from "./styles";
 
 function getStatusLabel(status: StepStatus | null) {
   if (status === "completed") {
@@ -35,6 +35,7 @@ export function DailyCheckInCard({
   onToggleTaskStatus: (stepId: string) => void;
   onCompleteCheckIn: () => void;
 }) {
+  const homeStyles = useHomeStyles();
   const hasTasks = allSteps.length > 0;
   const completedCount = Object.values(draftStatuses).filter(
     (status) => status === "completed"

@@ -3,13 +3,15 @@ import { Text, View } from "react-native";
 import { formatHistoryDate } from "../../domain/habitQuestHistory";
 import { getCompletionModeLabel } from "../../domain/habitQuestProgress";
 import { DailyCheckIn } from "../../types/habitquest";
-import { historyStyles } from "./styles";
+import { useHistoryStyles } from "./styles";
 
 function count(statuses: DailyCheckIn["statuses"], target: "completed" | "partial" | "skipped") {
   return Object.values(statuses).filter((status) => status === target).length;
 }
 
 export function CheckInHistoryCard({ checkIns }: { checkIns: DailyCheckIn[] }) {
+  const historyStyles = useHistoryStyles();
+
   return (
     <View style={historyStyles.sectionCard}>
       <Text style={historyStyles.sectionTitle}>Recent check-ins</Text>

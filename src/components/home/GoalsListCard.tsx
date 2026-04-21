@@ -1,7 +1,7 @@
 import { Pressable, Text, View } from "react-native";
 
 import { Goal } from "../../types/habitquest";
-import { homeStyles } from "./styles";
+import { useHomeStyles } from "./styles";
 
 export function GoalsListCard({
   goals,
@@ -12,6 +12,7 @@ export function GoalsListCard({
   onEditGoal: (goalId: string) => void;
   onDeleteGoal: (goalId: string) => void;
 }) {
+  const homeStyles = useHomeStyles();
   return (
     <View style={homeStyles.sectionCard}>
       <View style={homeStyles.sectionHeaderRow}>

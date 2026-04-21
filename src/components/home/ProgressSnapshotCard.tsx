@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-import { homeStyles } from "./styles";
+import { useHomeStyles } from "./styles";
 import { ProgressBar } from "./ProgressBar";
 
 export function ProgressSnapshotCard({
@@ -14,6 +14,7 @@ export function ProgressSnapshotCard({
   completionPercent: number;
   rewardText: string;
 }) {
+  const homeStyles = useHomeStyles();
   return (
     <View style={homeStyles.sectionCard}>
       <Text style={homeStyles.sectionTitle}>Progress snapshot</Text>

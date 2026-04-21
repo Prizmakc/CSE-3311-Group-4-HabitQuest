@@ -1,13 +1,19 @@
+import { useMemo } from "react";
 import { StyleSheet } from "react-native";
 
-export const homeStyles = StyleSheet.create({
+import { HabitQuestTheme, lightTheme, useTheme } from "../../theme/theme";
+
+export function createHomeStyles(theme: HabitQuestTheme) {
+  const c = theme.colors;
+
+  return StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#F4F0E8"
+    backgroundColor: c.background
   },
   loadingSafe: {
     flex: 1,
-    backgroundColor: "#F4F0E8"
+    backgroundColor: c.background
   },
   loadingWrap: {
     flex: 1,
@@ -16,7 +22,7 @@ export const homeStyles = StyleSheet.create({
     gap: 12
   },
   loadingText: {
-    color: "#365247",
+    color: c.textSecondary,
     fontSize: 16
   },
   container: {
@@ -26,7 +32,7 @@ export const homeStyles = StyleSheet.create({
     gap: 14
   },
   hero: {
-    backgroundColor: "#20443A",
+    backgroundColor: c.hero,
     borderRadius: 24,
     padding: 18,
     gap: 10
@@ -35,88 +41,88 @@ export const homeStyles = StyleSheet.create({
     gap: 6
   },
   eyebrow: {
-    color: "#D5E3DC",
+    color: c.heroTextSecondary,
     textTransform: "uppercase",
     letterSpacing: 1.2,
     fontSize: 12,
     fontWeight: "700"
   },
   heroTitle: {
-    color: "#FAF7F1",
+    color: c.heroText,
     fontSize: 30,
     lineHeight: 34,
     fontWeight: "700"
   },
   heroSubtitle: {
-    color: "#DDE6E1",
+    color: c.heroTextSecondary,
     fontSize: 15,
     lineHeight: 21
   },
   heroModeTag: {
     alignSelf: "flex-start",
-    backgroundColor: "#E2ECD9",
+    backgroundColor: c.successSoft,
     borderRadius: 999,
     paddingHorizontal: 12,
     paddingVertical: 8,
-    color: "#234C3D",
+    color: c.buttonSecondaryText,
     fontSize: 12,
     fontWeight: "700"
   },
   banner: {
-    backgroundColor: "#F6E5C6",
+    backgroundColor: c.gentleSurface,
     borderRadius: 18,
     padding: 16,
     gap: 8,
     borderWidth: 1,
-    borderColor: "#EACF98"
+    borderColor: c.gentleBorder
   },
   bannerActive: {
-    backgroundColor: "#E7F0E5",
-    borderColor: "#8FAE9E",
+    backgroundColor: c.gentleSurfaceActive,
+    borderColor: c.gentleBorderActive,
     borderWidth: 2
   },
   bannerTitle: {
-    color: "#5A3B13",
+    color: c.gentleText,
     fontSize: 18,
     fontWeight: "700"
   },
   bannerBody: {
-    color: "#6E4A17",
+    color: c.gentleTextSecondary,
     fontSize: 14,
     lineHeight: 20
   },
   bannerButton: {
-    backgroundColor: "#6E4A17",
+    backgroundColor: c.gentleTextSecondary,
     borderRadius: 12,
     paddingVertical: 12,
     alignItems: "center"
   },
   bannerButtonText: {
-    color: "#FFF8ED",
+    color: c.buttonPrimaryText,
     fontWeight: "700",
     fontSize: 15
   },
   gentleTargetText: {
     alignSelf: "flex-start",
-    backgroundColor: "#D5E4D4",
+    backgroundColor: c.successSoft,
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 6,
-    color: "#2B5545",
+    color: c.buttonSecondaryText,
     fontSize: 13,
     fontWeight: "700"
   },
   sectionCard: {
-    backgroundColor: "#FCFBF7",
+    backgroundColor: c.card,
     borderRadius: 20,
     padding: 16,
     gap: 12,
     borderWidth: 1,
-    borderColor: "#E8E0D4"
+    borderColor: c.border
   },
   gentleCheckInCard: {
-    backgroundColor: "#F4FAF1",
-    borderColor: "#93B49E",
+    backgroundColor: c.gentleSurfaceActive,
+    borderColor: c.gentleBorderActive,
     borderWidth: 2
   },
   sectionHeaderRow: {
@@ -126,56 +132,56 @@ export const homeStyles = StyleSheet.create({
     alignItems: "flex-start"
   },
   sectionTitle: {
-    color: "#1E362F",
+    color: c.textPrimary,
     fontSize: 22,
     fontWeight: "700"
   },
   sectionBody: {
-    color: "#5E6F66",
+    color: c.textSecondary,
     fontSize: 14,
     lineHeight: 20
   },
   progressTrack: {
     height: 12,
-    backgroundColor: "#E0D8CA",
+    backgroundColor: c.disabledBackground,
     borderRadius: 999,
     overflow: "hidden"
   },
   progressFill: {
     height: "100%",
-    backgroundColor: "#3E6E5B",
+    backgroundColor: c.accent,
     borderRadius: 999
   },
   progressCaption: {
-    color: "#5E6F66",
+    color: c.textSecondary,
     fontSize: 13
   },
   rewardCard: {
-    backgroundColor: "#EEE2D0",
+    backgroundColor: c.surfaceSecondary,
     borderRadius: 16,
     padding: 14,
     gap: 6
   },
   rewardLabel: {
-    color: "#6E4A17",
+    color: c.gentleTextSecondary,
     fontWeight: "700",
     fontSize: 12,
     textTransform: "uppercase",
     letterSpacing: 1
   },
   rewardText: {
-    color: "#3D3429",
+    color: c.textPrimary,
     fontSize: 14,
     lineHeight: 20
   },
   input: {
-    backgroundColor: "#FFFFFF",
-    borderColor: "#DCCFBE",
+    backgroundColor: c.inputBackground,
+    borderColor: c.inputBorder,
     borderWidth: 1,
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 12,
-    color: "#1E362F",
+    color: c.textPrimary,
     fontSize: 15
   },
   stepComposer: {
@@ -193,7 +199,7 @@ export const homeStyles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    backgroundColor: "#F6F1E8",
+    backgroundColor: c.surfaceSecondary,
     borderRadius: 12,
     paddingHorizontal: 12,
     paddingVertical: 10,
@@ -208,49 +214,49 @@ export const homeStyles = StyleSheet.create({
     flex: 1
   },
   stepListText: {
-    color: "#29453B",
+    color: c.buttonSecondaryText,
     fontSize: 14,
     flex: 1
   },
   removeText: {
-    color: "#9D4A34",
+    color: c.destructive,
     fontSize: 13,
     fontWeight: "700"
   },
   emptyText: {
-    color: "#7C897F",
+    color: c.textMuted,
     fontSize: 14,
     lineHeight: 19
   },
   errorText: {
-    color: "#A23C2D",
+    color: c.error,
     fontSize: 14
   },
   successText: {
-    color: "#2C6A4A",
+    color: c.success,
     fontSize: 14,
     fontWeight: "600"
   },
   primaryAction: {
-    backgroundColor: "#274B3F",
+    backgroundColor: c.buttonPrimaryBackground,
     borderRadius: 14,
     paddingVertical: 14,
     alignItems: "center"
   },
   primaryActionCompact: {
     flex: 1,
-    backgroundColor: "#274B3F",
+    backgroundColor: c.buttonPrimaryBackground,
     borderRadius: 14,
     paddingVertical: 14,
     alignItems: "center"
   },
   primaryActionText: {
-    color: "#FDFCF9",
+    color: c.buttonPrimaryText,
     fontSize: 15,
     fontWeight: "700"
   },
   secondaryAction: {
-    backgroundColor: "#E8E0D4",
+    backgroundColor: c.border,
     borderRadius: 14,
     paddingHorizontal: 14,
     paddingVertical: 12,
@@ -258,18 +264,18 @@ export const homeStyles = StyleSheet.create({
     justifyContent: "center"
   },
   secondaryActionText: {
-    color: "#29453B",
+    color: c.buttonSecondaryText,
     fontSize: 14,
     fontWeight: "700"
   },
   checkInRow: {
-    backgroundColor: "#F7F3EB",
+    backgroundColor: c.surfaceSecondary,
     borderRadius: 16,
     padding: 12,
     gap: 12
   },
   taskRow: {
-    backgroundColor: "#F7F3EB",
+    backgroundColor: c.surfaceSecondary,
     borderRadius: 18,
     padding: 14,
     flexDirection: "row",
@@ -277,83 +283,83 @@ export const homeStyles = StyleSheet.create({
     justifyContent: "space-between",
     gap: 12,
     borderWidth: 1,
-    borderColor: "#E8E0D4"
+    borderColor: c.border
   },
   gentleTargetChip: {
     alignSelf: "flex-start",
-    backgroundColor: "#DCEBDA",
+    backgroundColor: c.successSoft,
     borderRadius: 999,
     paddingHorizontal: 12,
     paddingVertical: 8
   },
   gentleTargetChipText: {
-    color: "#2D5948",
+    color: c.buttonSecondaryText,
     fontSize: 13,
     fontWeight: "700"
   },
   gentlePrompt: {
-    color: "#49655B",
+    color: c.textSecondary,
     fontSize: 14,
     fontWeight: "700"
   },
   taskRowCompleted: {
-    backgroundColor: "#DDE9E3",
-    borderColor: "#6C8E7F"
+    backgroundColor: c.completedSurface,
+    borderColor: c.completedBorder
   },
   taskRowPartial: {
-    backgroundColor: "#E9EFE8",
-    borderColor: "#B2C6BB"
+    backgroundColor: c.partialSurface,
+    borderColor: c.partialBorder
   },
   taskRowSkipped: {
-    backgroundColor: "#F3EEE4",
-    borderColor: "#D8CFC1"
+    backgroundColor: c.skippedSurface,
+    borderColor: c.skippedBorder
   },
   taskRowCopy: {
     flex: 1,
     gap: 4
   },
   taskRowTitle: {
-    color: "#1E362F",
+    color: c.textPrimary,
     fontSize: 16,
     fontWeight: "700"
   },
   taskRowMeta: {
-    color: "#66766E",
+    color: c.textMuted,
     fontSize: 13
   },
   taskStateBadge: {
     borderRadius: 999,
-    backgroundColor: "#ECE5D8",
+    backgroundColor: c.buttonSecondaryBackground,
     paddingHorizontal: 12,
     paddingVertical: 9
   },
   taskStateBadgeCompleted: {
-    backgroundColor: "#365F51"
+    backgroundColor: c.accent
   },
   taskStateBadgePartial: {
-    backgroundColor: "#6E8D80"
+    backgroundColor: c.partialBorder
   },
   taskStateBadgeSkipped: {
-    backgroundColor: "#A99C8C"
+    backgroundColor: c.skippedBorder
   },
   taskStateBadgeText: {
-    color: "#355247",
+    color: c.buttonSecondaryText,
     fontWeight: "700",
     fontSize: 12
   },
   taskStateBadgeTextActive: {
-    color: "#FCFBF7"
+    color: c.card
   },
   checkInCopy: {
     gap: 4
   },
   checkInStep: {
-    color: "#1E362F",
+    color: c.textPrimary,
     fontSize: 16,
     fontWeight: "700"
   },
   checkInGoal: {
-    color: "#66766E",
+    color: c.textMuted,
     fontSize: 13
   },
   statusButtonRow: {
@@ -365,21 +371,21 @@ export const homeStyles = StyleSheet.create({
     borderRadius: 12,
     paddingVertical: 10,
     alignItems: "center",
-    backgroundColor: "#ECE5D8"
+    backgroundColor: c.buttonSecondaryBackground
   },
   statusButtonActive: {
-    backgroundColor: "#365F51"
+    backgroundColor: c.accent
   },
   statusButtonText: {
-    color: "#355247",
+    color: c.buttonSecondaryText,
     fontWeight: "700",
     fontSize: 13
   },
   statusButtonTextActive: {
-    color: "#FDFCF9"
+    color: c.buttonPrimaryText
   },
   inputLabel: {
-    color: "#486258",
+    color: c.textSecondary,
     fontSize: 13,
     fontWeight: "700",
     textTransform: "uppercase",
@@ -390,27 +396,27 @@ export const homeStyles = StyleSheet.create({
     gap: 8
   },
   energyChip: {
-    backgroundColor: "#ECE5D8",
+    backgroundColor: c.buttonSecondaryBackground,
     borderRadius: 999,
     paddingHorizontal: 14,
     paddingVertical: 10
   },
   energyChipActive: {
-    backgroundColor: "#C7D5CC"
+    backgroundColor: c.accentSoft
   },
   energyChipText: {
-    color: "#365247",
+    color: c.textSecondary,
     fontWeight: "700"
   },
   energyChipTextActive: {
-    color: "#1D362E"
+    color: c.textPrimary
   },
   noteInput: {
     minHeight: 88,
     textAlignVertical: "top"
   },
   secondaryOutline: {
-    borderColor: "#C7B8A4",
+    borderColor: c.inputBorder,
     borderWidth: 1,
     borderRadius: 14,
     paddingVertical: 12,
@@ -418,14 +424,14 @@ export const homeStyles = StyleSheet.create({
   },
   secondaryOutlineCompact: {
     flex: 1,
-    borderColor: "#C7B8A4",
+    borderColor: c.inputBorder,
     borderWidth: 1,
     borderRadius: 14,
     paddingVertical: 12,
     alignItems: "center"
   },
   secondaryOutlineText: {
-    color: "#5B5144",
+    color: c.textMuted,
     fontWeight: "700",
     fontSize: 14
   },
@@ -437,18 +443,18 @@ export const homeStyles = StyleSheet.create({
     flex: 1,
     borderRadius: 14,
     paddingVertical: 12,
-    backgroundColor: "#EFE8DD",
+    backgroundColor: c.buttonSecondaryBackground,
     alignItems: "center"
   },
   toggleButtonActive: {
-    backgroundColor: "#D7E2DB"
+    backgroundColor: c.accentSoft
   },
   toggleButtonText: {
-    color: "#55675F",
+    color: c.textSecondary,
     fontWeight: "700"
   },
   toggleButtonTextActive: {
-    color: "#1F392F"
+    color: c.textPrimary
   },
   reflectionInput: {
     minHeight: 110,
@@ -456,7 +462,7 @@ export const homeStyles = StyleSheet.create({
   },
   modalBackdrop: {
     flex: 1,
-    backgroundColor: "rgba(24, 31, 27, 0.35)",
+    backgroundColor: c.overlay,
     justifyContent: "center",
     paddingHorizontal: 18
   },
@@ -464,20 +470,20 @@ export const homeStyles = StyleSheet.create({
     width: "100%"
   },
   modalCard: {
-    backgroundColor: "#FCFBF7",
+    backgroundColor: c.card,
     borderRadius: 24,
     padding: 18,
     gap: 12,
     borderWidth: 1,
-    borderColor: "#E8E0D4"
+    borderColor: c.border
   },
   modalTitle: {
-    color: "#1E362F",
+    color: c.textPrimary,
     fontSize: 22,
     fontWeight: "700"
   },
   modalBody: {
-    color: "#5E6F66",
+    color: c.textSecondary,
     fontSize: 14,
     lineHeight: 20
   },
@@ -486,7 +492,7 @@ export const homeStyles = StyleSheet.create({
     gap: 10
   },
   goalCard: {
-    backgroundColor: "#F6F1E8",
+    backgroundColor: c.surfaceSecondary,
     borderRadius: 16,
     padding: 14,
     gap: 8
@@ -502,27 +508,27 @@ export const homeStyles = StyleSheet.create({
     gap: 12
   },
   goalCardActionText: {
-    color: "#5B5144",
+    color: c.textMuted,
     fontSize: 12,
     fontWeight: "700"
   },
   goalCardActionDangerText: {
-    color: "#9D4A34",
+    color: c.destructive,
     fontSize: 12,
     fontWeight: "700"
   },
   goalCardTitle: {
-    color: "#1E362F",
+    color: c.textPrimary,
     fontWeight: "700",
     fontSize: 17
   },
   goalCardWhy: {
-    color: "#5E6F66",
+    color: c.textSecondary,
     fontSize: 14,
     lineHeight: 20
   },
   goalCardReward: {
-    color: "#7A5319",
+    color: c.warning,
     fontSize: 13,
     fontWeight: "700"
   },
@@ -530,7 +536,7 @@ export const homeStyles = StyleSheet.create({
     gap: 4
   },
   goalCardStepText: {
-    color: "#365247",
+    color: c.textSecondary,
     fontSize: 14
   },
   buttonPressed: {
@@ -546,13 +552,13 @@ export const homeStyles = StyleSheet.create({
   devButton: {
     flex: 1,
     borderWidth: 1,
-    borderColor: "#D6CAB8",
+    borderColor: c.inputBorder,
     borderRadius: 12,
     paddingVertical: 10,
     alignItems: "center"
   },
   devButtonText: {
-    color: "#6B6257",
+    color: c.textMuted,
     fontSize: 13,
     fontWeight: "700"
   },
@@ -561,8 +567,16 @@ export const homeStyles = StyleSheet.create({
     paddingVertical: 8
   },
   textDangerButtonText: {
-    color: "#9D4A34",
+    color: c.destructive,
     fontSize: 14,
     fontWeight: "700"
   }
-});
+  });
+}
+
+export function useHomeStyles() {
+  const { theme } = useTheme();
+  return useMemo(() => createHomeStyles(theme), [theme]);
+}
+
+export const homeStyles = createHomeStyles(lightTheme);

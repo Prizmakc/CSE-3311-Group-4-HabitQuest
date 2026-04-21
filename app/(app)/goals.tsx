@@ -5,10 +5,13 @@ import { DeveloperToolsCard } from "../../src/components/home/DeveloperToolsCard
 import { GoalComposerCard } from "../../src/components/home/GoalComposerCard";
 import { GoalEditModal } from "../../src/components/home/GoalEditModal";
 import { GoalsListCard } from "../../src/components/home/GoalsListCard";
-import { homeStyles } from "../../src/components/home/styles";
+import { useHomeStyles } from "../../src/components/home/styles";
 import { useHabitQuestGoals } from "../../src/hooks/useHabitQuestGoals";
+import { useTheme } from "../../src/theme/theme";
 
 export default function GoalsScreen() {
+  const homeStyles = useHomeStyles();
+  const { theme } = useTheme();
   const {
     isLoading,
     data,
@@ -51,7 +54,7 @@ export default function GoalsScreen() {
     return (
       <SafeAreaView style={homeStyles.loadingSafe}>
         <View style={homeStyles.loadingWrap}>
-          <ActivityIndicator size="large" color="#20443A" />
+          <ActivityIndicator size="large" color={theme.colors.accent} />
           <Text style={homeStyles.loadingText}>Loading your goals...</Text>
         </View>
       </SafeAreaView>

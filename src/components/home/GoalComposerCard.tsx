@@ -1,7 +1,8 @@
 import { Pressable, Text, TextInput, View } from "react-native";
 
 import { GoalStep } from "../../types/habitquest";
-import { homeStyles } from "./styles";
+import { useHomeStyles } from "./styles";
+import { useTheme } from "../../theme/theme";
 
 export function GoalComposerCard({
   goalTitle,
@@ -34,6 +35,8 @@ export function GoalComposerCard({
   onRemoveDraftStep: (id: string) => void;
   onSaveGoal: () => void;
 }) {
+  const homeStyles = useHomeStyles();
+  const { theme } = useTheme();
   return (
     <View style={homeStyles.sectionCard}>
       <Text style={homeStyles.sectionTitle}>Create a goal</Text>
@@ -42,21 +45,21 @@ export function GoalComposerCard({
       </Text>
       <TextInput
         placeholder="Goal title"
-        placeholderTextColor="#6E7E76"
+        placeholderTextColor={theme.colors.placeholder}
         style={homeStyles.input}
         value={goalTitle}
         onChangeText={setGoalTitle}
       />
       <TextInput
         placeholder="Why this matters"
-        placeholderTextColor="#6E7E76"
+        placeholderTextColor={theme.colors.placeholder}
         style={homeStyles.input}
         value={goalWhy}
         onChangeText={setGoalWhy}
       />
       <TextInput
         placeholder="Reward or milestone"
-        placeholderTextColor="#6E7E76"
+        placeholderTextColor={theme.colors.placeholder}
         style={homeStyles.input}
         value={goalReward}
         onChangeText={setGoalReward}
@@ -64,7 +67,7 @@ export function GoalComposerCard({
       <View style={homeStyles.stepComposer}>
         <TextInput
           placeholder="Add one small step"
-          placeholderTextColor="#6E7E76"
+          placeholderTextColor={theme.colors.placeholder}
           style={[homeStyles.input, homeStyles.stepComposerInput]}
           value={stepDraft}
           onChangeText={setStepDraft}

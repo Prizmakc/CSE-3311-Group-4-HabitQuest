@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-import { homeStyles } from "./styles";
+import { useHomeStyles } from "./styles";
 
 export function HomeHero({
   gentleModeEnabled,
@@ -9,6 +9,7 @@ export function HomeHero({
   gentleModeEnabled: boolean;
   daySuccessful: boolean;
 }) {
+  const homeStyles = useHomeStyles();
   return (
     <View style={homeStyles.hero}>
       <View style={homeStyles.heroCopy}>

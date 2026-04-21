@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-import { historyStyles } from "./styles";
+import { useHistoryStyles } from "./styles";
 
 export function HistoryHeader({
   checkInsThisWeek,
@@ -9,6 +9,7 @@ export function HistoryHeader({
   checkInsThisWeek: number;
   reflectionCount: number;
 }) {
+  const historyStyles = useHistoryStyles();
   return (
     <View style={historyStyles.headerCard}>
       <Text style={historyStyles.eyebrow}>History</Text>

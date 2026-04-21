@@ -1,9 +1,15 @@
+import { useMemo } from "react";
 import { StyleSheet } from "react-native";
 
-export const historyStyles = StyleSheet.create({
+import { HabitQuestTheme, lightTheme, useTheme } from "../../theme/theme";
+
+export function createHistoryStyles(theme: HabitQuestTheme) {
+  const c = theme.colors;
+
+  return StyleSheet.create({
   safe: {
     flex: 1,
-    backgroundColor: "#F4F0E8"
+    backgroundColor: c.background
   },
   container: {
     paddingHorizontal: 16,
@@ -18,30 +24,30 @@ export const historyStyles = StyleSheet.create({
     gap: 12
   },
   loadingText: {
-    color: "#365247",
+    color: c.textSecondary,
     fontSize: 16
   },
   headerCard: {
-    backgroundColor: "#20443A",
+    backgroundColor: c.hero,
     borderRadius: 24,
     padding: 18,
     gap: 12
   },
   eyebrow: {
-    color: "#D5E3DC",
+    color: c.heroTextSecondary,
     textTransform: "uppercase",
     letterSpacing: 1.2,
     fontSize: 12,
     fontWeight: "700"
   },
   title: {
-    color: "#FAF7F1",
+    color: c.heroText,
     fontSize: 30,
     lineHeight: 34,
     fontWeight: "700"
   },
   subtitle: {
-    color: "#DDE6E1",
+    color: c.heroTextSecondary,
     fontSize: 15,
     lineHeight: 21
   },
@@ -51,35 +57,35 @@ export const historyStyles = StyleSheet.create({
   },
   statCard: {
     flex: 1,
-    backgroundColor: "#2D5649",
+    backgroundColor: c.heroSurface,
     borderRadius: 18,
     padding: 12,
     gap: 4
   },
   statLabel: {
-    color: "#C8D8D0",
+    color: c.heroTextSecondary,
     fontSize: 12
   },
   statValue: {
-    color: "#FFFFFF",
+    color: c.heroText,
     fontSize: 16,
     fontWeight: "700"
   },
   sectionCard: {
-    backgroundColor: "#FCFBF7",
+    backgroundColor: c.card,
     borderRadius: 20,
     padding: 16,
     gap: 12,
     borderWidth: 1,
-    borderColor: "#E8E0D4"
+    borderColor: c.border
   },
   sectionTitle: {
-    color: "#1E362F",
+    color: c.textPrimary,
     fontSize: 22,
     fontWeight: "700"
   },
   sectionBody: {
-    color: "#5E6F66",
+    color: c.textSecondary,
     fontSize: 14,
     lineHeight: 20
   },
@@ -89,30 +95,30 @@ export const historyStyles = StyleSheet.create({
   },
   trendCard: {
     flex: 1,
-    backgroundColor: "#F6F1E8",
+    backgroundColor: c.surfaceSecondary,
     borderRadius: 16,
     padding: 14,
     gap: 6
   },
   trendLabel: {
-    color: "#6B6257",
+    color: c.textMuted,
     fontSize: 12,
     textTransform: "uppercase",
     letterSpacing: 0.8,
     fontWeight: "700"
   },
   trendValue: {
-    color: "#1E362F",
+    color: c.textPrimary,
     fontSize: 20,
     fontWeight: "700"
   },
   trendCopy: {
-    color: "#5E6F66",
+    color: c.textSecondary,
     fontSize: 13,
     lineHeight: 18
   },
   historyItem: {
-    backgroundColor: "#F6F1E8",
+    backgroundColor: c.surfaceSecondary,
     borderRadius: 16,
     padding: 14,
     gap: 8
@@ -124,12 +130,12 @@ export const historyStyles = StyleSheet.create({
     alignItems: "center"
   },
   historyDate: {
-    color: "#1E362F",
+    color: c.textPrimary,
     fontWeight: "700",
     fontSize: 16
   },
   historyEnergy: {
-    color: "#6C766A",
+    color: c.textMuted,
     fontSize: 13
   },
   statusRow: {
@@ -138,19 +144,19 @@ export const historyStyles = StyleSheet.create({
     flexWrap: "wrap"
   },
   statusPill: {
-    backgroundColor: "#E8E0D4",
+    backgroundColor: c.border,
     borderRadius: 999,
     paddingHorizontal: 10,
     paddingVertical: 7
   },
   statusPillText: {
-    color: "#355247",
+    color: c.buttonSecondaryText,
     fontWeight: "700",
     fontSize: 12
   },
   gentleBadge: {
-    backgroundColor: "#E2ECD9",
-    color: "#2F5A47",
+    backgroundColor: c.successSoft,
+    color: c.buttonSecondaryText,
     borderRadius: 999,
     overflow: "hidden",
     paddingHorizontal: 10,
@@ -159,30 +165,38 @@ export const historyStyles = StyleSheet.create({
     fontWeight: "700"
   },
   noteText: {
-    color: "#4F6058",
+    color: c.textSecondary,
     fontSize: 14,
     lineHeight: 20
   },
   reflectionMeta: {
-    color: "#7A5319",
+    color: c.warning,
     fontSize: 12,
     fontWeight: "700",
     textTransform: "uppercase",
     letterSpacing: 0.8
   },
   reflectionText: {
-    color: "#2E4038",
+    color: c.textPrimary,
     fontSize: 14,
     lineHeight: 20
   },
   editAction: {
-    color: "#49655B",
+    color: c.textSecondary,
     fontSize: 13,
     fontWeight: "700"
   },
   emptyText: {
-    color: "#7C897F",
+    color: c.textMuted,
     fontSize: 14,
     lineHeight: 19
   }
-});
+  });
+}
+
+export function useHistoryStyles() {
+  const { theme } = useTheme();
+  return useMemo(() => createHistoryStyles(theme), [theme]);
+}
+
+export const historyStyles = createHistoryStyles(lightTheme);

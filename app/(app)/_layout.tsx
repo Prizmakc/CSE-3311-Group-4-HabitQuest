@@ -2,9 +2,11 @@ import { Redirect, Tabs } from "expo-router";
 
 import { HabitQuestDataProvider } from "../../src/providers/HabitQuestDataProvider";
 import { useAuth } from "../../src/providers/AuthProvider";
+import { useTheme } from "../../src/theme/theme";
 
 export default function AppLayout() {
   const { session, isLoading } = useAuth();
+  const { theme } = useTheme();
 
   if (isLoading) {
     return null;
@@ -19,11 +21,11 @@ export default function AppLayout() {
       <Tabs
         screenOptions={{
           headerShown: false,
-          tabBarActiveTintColor: "#1E362F",
-          tabBarInactiveTintColor: "#7A7B76",
+          tabBarActiveTintColor: theme.colors.tabIconSelected,
+          tabBarInactiveTintColor: theme.colors.tabIconDefault,
           tabBarStyle: {
-            backgroundColor: "#FCFBF7",
-            borderTopColor: "#E8E0D4",
+            backgroundColor: theme.colors.tabBarBackground,
+            borderTopColor: theme.colors.border,
             height: 72,
             paddingTop: 8,
             paddingBottom: 12

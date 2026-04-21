@@ -9,7 +9,8 @@ import {
   View
 } from "react-native";
 
-import { homeStyles } from "./styles";
+import { useHomeStyles } from "./styles";
+import { useTheme } from "../../theme/theme";
 
 export function ReflectionCard({
   visible,
@@ -34,6 +35,8 @@ export function ReflectionCard({
   onCancel: () => void;
   onSaveReflection: () => void;
 }) {
+  const homeStyles = useHomeStyles();
+  const { theme } = useTheme();
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
       <Pressable style={homeStyles.modalBackdrop} onPress={Keyboard.dismiss}>
@@ -51,7 +54,7 @@ export function ReflectionCard({
             </Text>
             <TextInput
               placeholder="Only if you want to."
-              placeholderTextColor="#6E7E76"
+              placeholderTextColor={theme.colors.placeholder}
               style={[homeStyles.input, homeStyles.reflectionInput]}
               multiline
               value={reflectionText}

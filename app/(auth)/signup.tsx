@@ -1,12 +1,16 @@
 import { Link, router } from "expo-router";
 import { useState } from "react";
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { AuthInput } from "../../src/components/AuthInput";
+import { useAuthStyles } from "../../src/components/authStyles";
+import { useTheme } from "../../src/theme/theme";
 import { supabase } from "../../src/lib/supabase";
 
 export default function SignupScreen() {
+  const styles = useAuthStyles();
+  const { theme } = useTheme();
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -51,7 +55,7 @@ export default function SignupScreen() {
   return (
     <SafeAreaView style={styles.safe}>
       <View style={styles.container}>
-        <Text style={styles.title}>Create account</Text>
+        <Text style={styles.titleCompact}>Create account</Text>
         <Text style={styles.subtitle}>Start building consistent progress</Text>
 
         <View style={styles.form}>
@@ -103,7 +107,7 @@ export default function SignupScreen() {
             ]}
           >
             {isSubmitting ? (
-              <ActivityIndicator color="#FFFFFF" />
+              <ActivityIndicator color={theme.colors.buttonPrimaryText} />
             ) : (
               <Text style={styles.primaryButtonText}>Sign Up</Text>
             )}
@@ -120,66 +124,3 @@ export default function SignupScreen() {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: "#F3F4F6" },
-  container: {
-    flex: 1,
-    paddingHorizontal: 20,
-    paddingTop: 36,
-    gap: 18
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: "700",
-    color: "#111827"
-  },
-  subtitle: {
-    fontSize: 16,
-    color: "#4B5563"
-  },
-  form: {
-    marginTop: 8,
-    gap: 12
-  },
-  primaryButton: {
-    marginTop: 6,
-    backgroundColor: "#111827",
-    minHeight: 48,
-    borderRadius: 10,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  primaryButtonDisabled: {
-    opacity: 0.6
-  },
-  primaryButtonText: {
-    color: "#FFFFFF",
-    fontSize: 16,
-    fontWeight: "600"
-  },
-  error: {
-    color: "#B91C1C",
-    fontSize: 14
-  },
-  success: {
-    color: "#166534",
-    fontSize: 14
-  },
-  footerRow: {
-    marginTop: "auto",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 6,
-    paddingBottom: 20
-  },
-  footerText: {
-    color: "#4B5563",
-    fontSize: 14
-  },
-  linkInline: {
-    color: "#111827",
-    fontWeight: "600",
-    textDecorationLine: "underline"
-  }
-});

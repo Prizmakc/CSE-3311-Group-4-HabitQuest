@@ -1,8 +1,9 @@
 import { View } from "react-native";
 
-import { homeStyles } from "./styles";
+import { useHomeStyles } from "./styles";
 
 export function ProgressBar({ value }: { value: number }) {
+  const homeStyles = useHomeStyles();
   return (
     <View style={homeStyles.progressTrack}>
       <View

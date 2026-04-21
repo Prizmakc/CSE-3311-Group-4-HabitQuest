@@ -1,6 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 
-import { homeStyles } from "./styles";
+import { useHomeStyles } from "./styles";
 
 export function DeveloperToolsCard({
   onSeedDemoData,
@@ -9,6 +9,7 @@ export function DeveloperToolsCard({
   onSeedDemoData: () => void;
   onResetLocalData: () => void;
 }) {
+  const homeStyles = useHomeStyles();
   return (
     <View style={homeStyles.sectionCard}>
       <Text style={homeStyles.sectionTitle}>Developer utilities</Text>

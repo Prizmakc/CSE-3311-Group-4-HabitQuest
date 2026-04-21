@@ -1,6 +1,6 @@
 import { Text, View } from "react-native";
 
-import { historyStyles } from "./styles";
+import { useHistoryStyles } from "./styles";
 
 export function TrendSummaryCard({
   totalCompleted,
@@ -11,6 +11,7 @@ export function TrendSummaryCard({
   totalPartial: number;
   totalSkipped: number;
 }) {
+  const historyStyles = useHistoryStyles();
   return (
     <View style={historyStyles.sectionCard}>
       <Text style={historyStyles.sectionTitle}>Trend summary</Text>

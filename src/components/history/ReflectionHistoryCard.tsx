@@ -1,7 +1,7 @@
 import { Pressable, Text, View } from "react-native";
 
 import { formatHistoryDate } from "../../domain/habitQuestHistory";
-import { historyStyles } from "./styles";
+import { useHistoryStyles } from "./styles";
 
 export function ReflectionHistoryCard({
   reflections,
@@ -10,6 +10,7 @@ export function ReflectionHistoryCard({
   reflections: Array<{ date: string; text: string }>;
   onEditReflection: (date: string, text: string) => void;
 }) {
+  const historyStyles = useHistoryStyles();
   return (
     <View style={historyStyles.sectionCard}>
       <Text style={historyStyles.sectionTitle}>Recent reflections</Text>

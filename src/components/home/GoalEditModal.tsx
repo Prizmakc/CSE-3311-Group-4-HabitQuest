@@ -1,7 +1,8 @@
 import { Modal, Pressable, Text, TextInput, View } from "react-native";
 
 import { GoalStep } from "../../types/habitquest";
-import { homeStyles } from "./styles";
+import { useHomeStyles } from "./styles";
+import { useTheme } from "../../theme/theme";
 
 export function GoalEditModal({
   visible,
@@ -38,6 +39,8 @@ export function GoalEditModal({
   onDeleteGoal: () => void;
   onSave: () => void;
 }) {
+  const homeStyles = useHomeStyles();
+  const { theme } = useTheme();
   return (
     <Modal visible={visible} transparent animationType="fade" onRequestClose={onCancel}>
       <View style={homeStyles.modalBackdrop}>
@@ -45,21 +48,21 @@ export function GoalEditModal({
           <Text style={homeStyles.modalTitle}>Edit goal</Text>
           <TextInput
             placeholder="Goal title"
-            placeholderTextColor="#6E7E76"
+            placeholderTextColor={theme.colors.placeholder}
             style={homeStyles.input}
             value={title}
             onChangeText={setTitle}
           />
           <TextInput
             placeholder="Why this matters"
-            placeholderTextColor="#6E7E76"
+            placeholderTextColor={theme.colors.placeholder}
             style={homeStyles.input}
             value={why}
             onChangeText={setWhy}
           />
           <TextInput
             placeholder="Reward or milestone"
-            placeholderTextColor="#6E7E76"
+            placeholderTextColor={theme.colors.placeholder}
             style={homeStyles.input}
             value={reward}
             onChangeText={setReward}
@@ -67,7 +70,7 @@ export function GoalEditModal({
           <View style={homeStyles.stepComposer}>
             <TextInput
               placeholder="Add another step"
-              placeholderTextColor="#6E7E76"
+              placeholderTextColor={theme.colors.placeholder}
               style={[homeStyles.input, homeStyles.stepComposerInput]}
               value={stepDraft}
               onChangeText={setStepDraft}
@@ -81,7 +84,7 @@ export function GoalEditModal({
               <View key={step.id} style={homeStyles.editStepRow}>
                 <TextInput
                   placeholder="Step name"
-                  placeholderTextColor="#6E7E76"
+                  placeholderTextColor={theme.colors.placeholder}
                   style={[homeStyles.input, homeStyles.editStepInput]}
                   value={step.title}
                   onChangeText={(value) => onRenameStep(step.id, value)}

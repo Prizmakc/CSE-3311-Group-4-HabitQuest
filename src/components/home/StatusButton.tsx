@@ -1,6 +1,6 @@
 import { Pressable, Text } from "react-native";
 
-import { homeStyles } from "./styles";
+import { useHomeStyles } from "./styles";
 
 export function StatusButton({
   label,
@@ -11,6 +11,7 @@ export function StatusButton({
   active: boolean;
   onPress: () => void;
 }) {
+  const homeStyles = useHomeStyles();
   return (
     <Pressable
       onPress={onPress}

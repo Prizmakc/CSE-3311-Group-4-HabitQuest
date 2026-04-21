@@ -6,10 +6,13 @@ import { HistoryHeader } from "../../src/components/history/HistoryHeader";
 import { ReflectionHistoryCard } from "../../src/components/history/ReflectionHistoryCard";
 import { TrendSummaryCard } from "../../src/components/history/TrendSummaryCard";
 import { ReflectionCard } from "../../src/components/home/ReflectionCard";
-import { historyStyles } from "../../src/components/history/styles";
+import { useHistoryStyles } from "../../src/components/history/styles";
 import { useHabitQuestHistory } from "../../src/hooks/useHabitQuestHistory";
+import { useTheme } from "../../src/theme/theme";
 
 export default function HistoryScreen() {
+  const historyStyles = useHistoryStyles();
+  const { theme } = useTheme();
   const {
     isLoading,
     history,
@@ -25,7 +28,7 @@ export default function HistoryScreen() {
     return (
       <SafeAreaView style={historyStyles.safe}>
         <View style={historyStyles.loadingWrap}>
-          <ActivityIndicator size="large" color="#20443A" />
+          <ActivityIndicator size="large" color={theme.colors.accent} />
           <Text style={historyStyles.loadingText}>Loading recent patterns...</Text>
         </View>
       </SafeAreaView>

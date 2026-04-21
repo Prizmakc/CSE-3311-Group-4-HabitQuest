@@ -5,10 +5,13 @@ import { DailyCheckInCard } from "../../src/components/home/DailyCheckInCard";
 import { GentleModeBanner } from "../../src/components/home/GentleModeBanner";
 import { HomeHero } from "../../src/components/home/HomeHero";
 import { ReflectionCard } from "../../src/components/home/ReflectionCard";
-import { homeStyles } from "../../src/components/home/styles";
+import { useHomeStyles } from "../../src/components/home/styles";
 import { useHabitQuestToday } from "../../src/hooks/useHabitQuestToday";
+import { useTheme } from "../../src/theme/theme";
 
 export default function HomeScreen() {
+  const homeStyles = useHomeStyles();
+  const { theme } = useTheme();
   const {
     isLoading,
     saveState,
@@ -30,7 +33,7 @@ export default function HomeScreen() {
     return (
       <SafeAreaView style={homeStyles.loadingSafe}>
         <View style={homeStyles.loadingWrap}>
-          <ActivityIndicator size="large" color="#20443A" />
+          <ActivityIndicator size="large" color={theme.colors.accent} />
           <Text style={homeStyles.loadingText}>Loading your quiet momentum...</Text>
         </View>
       </SafeAreaView>

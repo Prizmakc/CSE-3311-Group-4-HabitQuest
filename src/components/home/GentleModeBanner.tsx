@@ -1,6 +1,6 @@
 import { Pressable, Text, View } from "react-native";
 
-import { homeStyles } from "./styles";
+import { useHomeStyles } from "./styles";
 
 export function GentleModeBanner({
   isActive,
@@ -13,6 +13,7 @@ export function GentleModeBanner({
   onEnable: () => void;
   onDisable: () => void;
 }) {
+  const homeStyles = useHomeStyles();
   return (
     <View style={[homeStyles.banner, isActive && homeStyles.bannerActive]}>
       <Text style={homeStyles.bannerTitle}>

@@ -1,12 +1,21 @@
 import { ActivityIndicator, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { homeStyles } from "../../src/components/home/styles";
+import { useHomeStyles } from "../../src/components/home/styles";
 import { useAuth } from "../../src/providers/AuthProvider";
 import { supabase } from "../../src/lib/supabase";
 import { useState } from "react";
+import { AppearanceMode, useTheme } from "../../src/theme/theme";
+
+const APPEARANCE_OPTIONS: Array<{ label: string; value: AppearanceMode }> = [
+  { label: "Light", value: "light" },
+  { label: "Dark", value: "dark" },
+  { label: "System", value: "system" }
+];
 
 export default function ProfileScreen() {
+  const homeStyles = useHomeStyles();
+  const { appearanceMode, effectiveThemeName, setAppearanceMode, theme } = useTheme();
   const [isSigningOut, setIsSigningOut] = useState(false);
   const { session, isLoading } = useAuth();
   const firstName =
@@ -24,7 +33,7 @@ export default function ProfileScreen() {
     return (
       <SafeAreaView style={homeStyles.loadingSafe}>
         <View style={homeStyles.loadingWrap}>
-          <ActivityIndicator size="large" color="#20443A" />
+          <ActivityIndicator size="large" color={theme.colors.accent} />
           <Text style={homeStyles.loadingText}>Loading your profile...</Text>
         </View>
       </SafeAreaView>
@@ -47,6 +56,41 @@ export default function ProfileScreen() {
           <View style={homeStyles.input}>
             <Text style={homeStyles.taskRowTitle}>{session?.user.email ?? "Unknown account"}</Text>
           </View>
+        </View>
+
+        <View style={homeStyles.sectionCard}>
+          <Text style={homeStyles.sectionTitle}>Appearance</Text>
+          <Text style={homeStyles.sectionBody}>
+            Choose a theme or follow your device setting. Current theme: {effectiveThemeName}.
+          </Text>
+          <View style={homeStyles.toggleRow}>
+            {APPEARANCE_OPTIONS.map((option) => {
+              const selected = appearanceMode === option.value;
+
+              return (
+                <Pressable
+                  key={option.value}
+                  onPress={() => {
+                    void setAppearanceMode(option.value);
+                  }}
+                  style={[homeStyles.toggleButton, selected && homeStyles.toggleButtonActive]}
+                >
+                  <Text
+                    style={[
+                      homeStyles.toggleButtonText,
+                      selected && homeStyles.toggleButtonTextActive
+                    ]}
+                  >
+                    {option.label}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </View>
+        </View>
+
+        <View style={homeStyles.sectionCard}>
+          <Text style={homeStyles.sectionTitle}>Account</Text>
           <Pressable
             onPress={() => {
               void onSignOut();
