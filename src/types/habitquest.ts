@@ -1,4 +1,5 @@
 export type StepStatus = "completed" | "partial" | "skipped";
+export type CompletionMode = "normal" | "gentle";
 
 export type GoalStep = {
   id: string;
@@ -19,10 +20,12 @@ export type DailyCheckIn = {
   date: string;
   statuses: Record<string, StepStatus>;
   reflection?: string;
+  completionMode?: CompletionMode;
 };
 
 export type HabitQuestData = {
   goals: Goal[];
   checkIns: DailyCheckIn[];
   gentleModeEnabled: boolean;
+  gentleModeDate?: string;
 };

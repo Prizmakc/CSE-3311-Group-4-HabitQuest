@@ -1,6 +1,7 @@
 import { Text, View } from "react-native";
 
 import { formatHistoryDate } from "../../domain/habitQuestHistory";
+import { getCompletionModeLabel } from "../../domain/habitQuestProgress";
 import { DailyCheckIn } from "../../types/habitquest";
 import { historyStyles } from "./styles";
 
@@ -17,7 +18,12 @@ export function CheckInHistoryCard({ checkIns }: { checkIns: DailyCheckIn[] }) {
       ) : (
         checkIns.map((checkIn) => (
           <View key={checkIn.date} style={historyStyles.historyItem}>
-            <Text style={historyStyles.historyDate}>{formatHistoryDate(checkIn.date)}</Text>
+            <View style={historyStyles.historyHeader}>
+              <Text style={historyStyles.historyDate}>{formatHistoryDate(checkIn.date)}</Text>
+              {checkIn.completionMode === "gentle" ? (
+                <Text style={historyStyles.gentleBadge}>{getCompletionModeLabel(checkIn)}</Text>
+              ) : null}
+            </View>
             <View style={historyStyles.statusRow}>
               <View style={historyStyles.statusPill}>
                 <Text style={historyStyles.statusPillText}>

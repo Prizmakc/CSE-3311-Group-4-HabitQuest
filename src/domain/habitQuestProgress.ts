@@ -23,6 +23,34 @@ function isPositiveStatus(status: StepStatus) {
   return status === "completed" || status === "partial";
 }
 
+export function isGentleModeActiveForDate(data: HabitQuestData, date = todayDateKey()) {
+  return Boolean(data.gentleModeEnabled && data.gentleModeDate === date);
+}
+
+export function hasCompletedAtLeastOneStep(statuses: Record<string, StepStatus>) {
+  return Object.values(statuses).some((status) => status === "completed");
+}
+
+function hasAnyPositiveProgress(statuses: Record<string, StepStatus>) {
+  return Object.values(statuses).some(isPositiveStatus);
+}
+
+export function isDailyCheckInSuccessful(checkIn: DailyCheckIn | null) {
+  if (!checkIn) {
+    return false;
+  }
+
+  if (checkIn.completionMode === "gentle") {
+    return hasCompletedAtLeastOneStep(checkIn.statuses);
+  }
+
+  return hasAnyPositiveProgress(checkIn.statuses);
+}
+
+export function getCompletionModeLabel(checkIn: DailyCheckIn) {
+  return checkIn.completionMode === "gentle" ? "Gentle Day" : "Normal";
+}
+
 export function getMissedDays(checkIns: DailyCheckIn[]) {
   const recentDates = getRelativeDates(3);
 
@@ -45,9 +73,7 @@ export function getStreak(checkIns: DailyCheckIn[]) {
     const isToday = checkIn.date === todayDateKey();
 
     if (checkIn.date === cursorKey || (streak === 0 && isToday)) {
-      const completedSteps = Object.values(checkIn.statuses).filter(isPositiveStatus);
-
-      if (completedSteps.length === 0) {
+      if (!isDailyCheckInSuccessful(checkIn)) {
         break;
       }
 
@@ -62,18 +88,18 @@ export function getStreak(checkIns: DailyCheckIn[]) {
   return streak;
 }
 
-export function isDaySuccessful(checkIn: DailyCheckIn | null, gentleModeEnabled: boolean) {
+export function isDaySuccessful(checkIn: DailyCheckIn | null, gentleModeActiveToday: boolean) {
   if (!checkIn) {
     return false;
   }
 
-  if (!gentleModeEnabled) {
-    return Object.values(checkIn.statuses).every((status) => status === "completed");
+  if (checkIn.completionMode) {
+    return isDailyCheckInSuccessful(checkIn);
   }
 
-  return Object.values(checkIn.statuses).some(
-    (status) => status === "completed" || status === "partial"
-  );
+  return gentleModeActiveToday
+    ? hasCompletedAtLeastOneStep(checkIn.statuses)
+    : hasAnyPositiveProgress(checkIn.statuses);
 }
 
 export function getCompletionPercent(allSteps: GoalStepWithGoal[], checkIns: DailyCheckIn[]) {
@@ -92,11 +118,9 @@ export function getRequiredStepsToday(allSteps: GoalStepWithGoal[], gentleModeEn
   return gentleModeEnabled ? 1 : Math.min(3, Math.max(1, allSteps.length));
 }
 
-export function shouldSuggestGentleMode(checkIns: DailyCheckIn[], gentleModeEnabled: boolean) {
-  return getMissedDays(checkIns) >= 2 && !gentleModeEnabled;
-}
-
 export function getHistorySnapshot(data: HabitQuestData) {
+  const gentleModeActiveToday = isGentleModeActiveForDate(data);
+
   return {
     allSteps: flattenGoalSteps(data.goals),
     checkIns: sortCheckInsDescending(data.checkIns),
@@ -105,11 +129,11 @@ export function getHistorySnapshot(data: HabitQuestData) {
     completionPercent: getCompletionPercent(flattenGoalSteps(data.goals), data.checkIns),
     streak: getStreak(data.checkIns),
     missedDays: getMissedDays(data.checkIns),
-    daySuccessful: isDaySuccessful(getTodayCheckIn(data.checkIns), data.gentleModeEnabled),
+    gentleModeActiveToday,
+    daySuccessful: isDaySuccessful(getTodayCheckIn(data.checkIns), gentleModeActiveToday),
     requiredStepsToday: getRequiredStepsToday(
       flattenGoalSteps(data.goals),
-      data.gentleModeEnabled
-    ),
-    gentleModeSuggestion: shouldSuggestGentleMode(data.checkIns, data.gentleModeEnabled)
+      gentleModeActiveToday
+    )
   };
 }

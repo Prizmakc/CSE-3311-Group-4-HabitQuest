@@ -43,7 +43,6 @@ export default function GoalsScreen() {
     deleteEditStep,
     saveEditedGoal,
     requestDeleteGoal,
-    disableGentleMode,
     seedDemoData,
     resetLocalData
   } = useHabitQuestGoals();
@@ -64,10 +63,6 @@ export default function GoalsScreen() {
       <ScrollView contentContainerStyle={homeStyles.container}>
         <GoalsListCard
           goals={data.goals}
-          gentleModeEnabled={data.gentleModeEnabled}
-          onDisableGentleMode={() => {
-            void disableGentleMode();
-          }}
           onEditGoal={openGoalEditor}
           onDeleteGoal={requestDeleteGoal}
         />

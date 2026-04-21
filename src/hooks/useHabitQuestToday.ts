@@ -28,7 +28,8 @@ export function useHabitQuestToday() {
     data,
     saveCheckIn,
     saveReflection,
-    enableGentleMode
+    enableGentleMode,
+    disableGentleMode
   } = useHabitQuestData();
   const [draftStatuses, setDraftStatuses] = useState<Record<string, StepStatus>>({});
   const [reflectionText, setReflectionText] = useState("");
@@ -91,6 +92,7 @@ export function useHabitQuestToday() {
       setReflectionText("");
       setIsReflectionModalOpen(false);
     },
-    enableGentleMode
+    enableGentleMode,
+    disableGentleMode
   };
 }

@@ -11,7 +11,6 @@ export function useHabitQuestGoals() {
     createGoal,
     updateGoal,
     deleteGoal,
-    disableGentleMode,
     seedDemoData,
     resetLocalData
   } = useHabitQuestData();
@@ -212,7 +211,6 @@ export function useHabitQuestGoals() {
     deleteEditStep,
     saveEditedGoal,
     requestDeleteGoal,
-    disableGentleMode,
     seedDemoData,
     resetLocalData
   };
